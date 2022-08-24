@@ -21,9 +21,9 @@ public class ApplicationExceptionHandler {
      */
     @ExceptionHandler(InsertionFailedException.class)
     public ResponseEntity<BaseResponseDTO> handleInsertionFailedException(InsertionFailedException e){
-        logger.error("InsertionFailedException has occurred!");
+        logger.error("InsertionFailedException: " + e);
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
-        baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), "responseId", "requestId", e.getErrorCode().getDisplayMessage()));
+        baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), "responseId", "requestId"));
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
 
@@ -35,9 +35,9 @@ public class ApplicationExceptionHandler {
      */
     @ExceptionHandler(UserIdNotFoundException.class)
     public ResponseEntity<BaseResponseDTO> handleUserIdNotFoundException(UserIdNotFoundException e){
-        logger.error("UserIdNotFoundException has occurred!");
+        logger.error("UserIdNotFoundException: " +  e);
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
-        baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), "responseId", "requestId", e.getErrorCode().getDisplayMessage()));
+        baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), "responseId", "requestId"));
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
     }
 }

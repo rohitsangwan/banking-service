@@ -45,10 +45,11 @@ public class AccountService {
             RegisterUserResponseDTO registerUserResponseDTO = accountServiceHelper.makeRegisterUserResponseDTO(entity);
             return registerUserResponseDTO;
         } catch (Exception e) {
-            logger.debug("[insertDetailsForRegistration] details insertion failed in mysql for request: {}", registerRequestDTO, e);
+            logger.error("[insertDetailsForRegistration] details insertion failed in mysql for request: {}", registerRequestDTO, e);
             throw new InsertionFailedException(ErrorCode.USER_REGISTRATION_FAILED, ErrorCode.USER_REGISTRATION_FAILED.getErrorMessage(), ErrorCode.USER_REGISTRATION_FAILED.getDisplayMessage());
         }
     }
+
 
     /**
      * insert details for user on boarding
@@ -56,15 +57,15 @@ public class AccountService {
      * @param onBoardRequestDTO
      * @return onBoardResponseDTO
      */
-    public OnBoardResponseDTO insertDetailsForOnBoarding(OnBoardRequestDTO onBoardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
+    public OnBoardResponseDTO insertDetailsForOnBoarding(OnBoardRequestDTO onBoardRequestDTO) throws UserIdNotFoundException {
         try {
             logger.info("[insertDetailsForOnBoarding] On boarding a user: {}", onBoardRequestDTO);
             UserOnBoardModel user = userOnBoardRepository.save(accountServiceHelper.makeOnBoardingEntity(onBoardRequestDTO));
             OnBoardResponseDTO onBoardResponseDTO = accountServiceHelper.makeOnBoardingResponseDTO(user);
             return onBoardResponseDTO;
-        } catch (Exception e) {
-            logger.debug("[insertDetailsForOnBoarding] details insertion failed in mysql for request: {}", onBoardRequestDTO, e);
-            throw new InsertionFailedException(ErrorCode.USER_ONBOARD_FAILED, ErrorCode.USER_ONBOARD_FAILED.getErrorMessage(), ErrorCode.USER_ONBOARD_FAILED.getDisplayMessage());
+        } catch (UserIdNotFoundException e) {
+            logger.error("[insertDetailsForOnBoarding] details insertion failed in mysql for request: {}", onBoardRequestDTO, e);
+            throw new UserIdNotFoundException(ErrorCode.USER_ONBOARD_FAILED, ErrorCode.USER_ONBOARD_FAILED.getErrorMessage(), ErrorCode.USER_ONBOARD_FAILED.getDisplayMessage());
         }
     }
 }

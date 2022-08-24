@@ -68,7 +68,7 @@ public class AccountServiceHelper {
             userOnBoardModel.setRegisterUserId(registerUserModel.get().getId());
             return userOnBoardModel;
         } else {
-            logger.debug("[makeOnBoardingEntity] user does not exist for userId: {}", onBoardRequestDTO.getUserId());
+            logger.error("[makeOnBoardingEntity] user does not exist for userId: {}", onBoardRequestDTO.getUserId());
             throw new UserIdNotFoundException(ErrorCode.USER_ID_NOT_FOUND, ErrorCode.USER_ID_NOT_FOUND.getErrorMessage(), ErrorCode.USER_ID_NOT_FOUND.getDisplayMessage());
         }
     }
@@ -89,7 +89,7 @@ public class AccountServiceHelper {
             BeanUtils.copyProperties(registerUserModel, onBoardResponseDTO);
             return onBoardResponseDTO;
         } else {
-            logger.debug("[makeOnBoardingEntity] user does not exist for userId: {}", userOnBoardModel.getRegisterUserId());
+            logger.error("[makeOnBoardingEntity] user does not exist for userId: {}", userOnBoardModel.getRegisterUserId());
             throw new UserIdNotFoundException(ErrorCode.USER_ID_NOT_FOUND, ErrorCode.USER_ID_NOT_FOUND.getErrorMessage(), ErrorCode.USER_ID_NOT_FOUND.getDisplayMessage());
         }
     }

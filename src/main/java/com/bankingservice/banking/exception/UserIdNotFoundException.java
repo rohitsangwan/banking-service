@@ -1,6 +1,6 @@
 package com.bankingservice.banking.exception;
 
-public class UserIdNotFoundException extends Throwable {
+public class UserIdNotFoundException extends Exception {
     private ErrorCode errorCode;
     private String errorMessage;
     private String displayMessage;

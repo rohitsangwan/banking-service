@@ -1,6 +1,6 @@
 package com.bankingservice.banking.exception;
 
-public class InsertionFailedException extends Throwable {
+public class InsertionFailedException extends Exception {
     private ErrorCode errorCode;
     private String errorMessage;
     private String displayMessage;

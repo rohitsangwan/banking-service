@@ -5,11 +5,14 @@ import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.response.MetaDTO;
 import com.bankingservice.banking.dto.response.BaseResponseDTO;
 import com.bankingservice.banking.exception.InsertionFailedException;
+import com.bankingservice.banking.exception.SuccessCode;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.services.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -31,13 +34,13 @@ public class AccountController {
      * @return baseResponseDTO
      */
     @PostMapping("/register")
-    public BaseResponseDTO registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) throws InsertionFailedException {
+    public ResponseEntity<BaseResponseDTO> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) throws InsertionFailedException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         logger.info("[registerUser] user registration started");
         baseResponseDTO.setData(accountService.insertDetailsForRegistration(registerRequestDTO));
-        baseResponseDTO.setMetaDTO(createMetaData());
+        baseResponseDTO.setMetaDTO(createSuccessMetaData());
         logger.info("[registerUser] user successfully registered");
-        return baseResponseDTO;
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
 
     /**
@@ -48,13 +51,13 @@ public class AccountController {
      */
 
     @PostMapping("/onboard")
-    public BaseResponseDTO onBoardUser(@RequestBody OnBoardRequestDTO onBoardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
+    public ResponseEntity<BaseResponseDTO> onBoardUser(@RequestBody OnBoardRequestDTO onBoardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         logger.info("[onBoardUser] user on boarding started");
         baseResponseDTO.setData(accountService.insertDetailsForOnBoarding(onBoardRequestDTO));
-        baseResponseDTO.setMetaDTO(createMetaData());
+        baseResponseDTO.setMetaDTO(createSuccessMetaData());
         logger.info("[onBoardUser] On boarding completed!");
-        return baseResponseDTO;
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
 
 
@@ -65,12 +68,12 @@ public class AccountController {
      */
 
     @GetMapping("/health")
-    public BaseResponseDTO healthCheck(){
+    public ResponseEntity<BaseResponseDTO> healthCheck(){
         logger.info("[healthCheck] health check");
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         baseResponseDTO.setData("ok");
-        baseResponseDTO.setMetaDTO(createMetaData());
-        return baseResponseDTO;
+        baseResponseDTO.setMetaDTO(createSuccessMetaData());
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
 
     /**
@@ -79,7 +82,7 @@ public class AccountController {
      * @return MetaDTO
      */
 
-    private MetaDTO createMetaData(){
-        return new MetaDTO("123", "Mes", "Res", "Req","Dis");
+    private MetaDTO createSuccessMetaData(){
+        return new MetaDTO(SuccessCode.SUCCESS_CODE.getCode(), SuccessCode.SUCCESS_CODE.getMessage(), "Res", "Req");
     }
 }

@@ -24,7 +24,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +55,7 @@ public class AccountServiceTest {
     private static final long aadhaarNumber = RandomUtils.nextLong();
     private static final String address = RandomStringUtils.randomAlphanumeric(10);
     private static final String userId = RandomStringUtils.randomAlphanumeric(10);
+    private static final String userId1 = RandomStringUtils.randomAlphanumeric(10);
 
 
     @BeforeMethod

@@ -97,7 +97,7 @@ public class AccountControllerTest {
             accountService.insertDetailsForRegistration((RegisterRequestDTO) any);
             result = registerUserResponseDTO;
         }};
-        BaseResponseDTO baseResponseDTO = accountController.registerUser(registerRequestDTO);
+        BaseResponseDTO baseResponseDTO = accountController.registerUser(registerRequestDTO).getBody();
         Assert.assertNotNull(baseResponseDTO);
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
@@ -113,7 +113,7 @@ public class AccountControllerTest {
             accountService.insertDetailsForOnBoarding((OnBoardRequestDTO) any);
             result = onBoardResponseDTO;
         }};
-        BaseResponseDTO baseResponseDTO = accountController.onBoardUser(onBoardRequestDTO);
+        BaseResponseDTO baseResponseDTO = accountController.onBoardUser(onBoardRequestDTO).getBody();
         Assert.assertNotNull(baseResponseDTO);
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
@@ -125,7 +125,7 @@ public class AccountControllerTest {
 
     @Test
     public void healthCheckTest() {
-        BaseResponseDTO baseResponseDTO = accountController.healthCheck();
+        BaseResponseDTO baseResponseDTO = accountController.healthCheck().getBody();
         Assert.assertNotNull(baseResponseDTO);
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
