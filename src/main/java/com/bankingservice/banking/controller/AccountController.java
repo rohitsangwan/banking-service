@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Rohit Sangwan
  */
 @RestController
-@RequestMapping("/create-account")
+@RequestMapping("/account/v1")
 public class AccountController {
     @Autowired
     private AccountService accountService;

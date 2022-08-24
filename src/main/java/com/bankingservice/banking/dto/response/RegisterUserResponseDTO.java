@@ -8,9 +8,9 @@ import java.io.Serializable;
 public class RegisterUserResponseDTO implements Serializable {
     private String name;
     private String email;
-    private long mobileNumber;
+    private Long mobileNumber;
     private String userName;
     private String password;
     private String userId;
-    private int registerUserId;
+    private Integer registerUserId;
 }

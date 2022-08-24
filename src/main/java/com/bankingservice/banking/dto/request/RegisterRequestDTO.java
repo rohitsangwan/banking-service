@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class RegisterRequestDTO implements Serializable {
     private String name;
     private String email;
-    private long mobileNumber;
+    private Long mobileNumber;
     private String userName;
     private String password;
 }

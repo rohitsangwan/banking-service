@@ -9,8 +9,8 @@ import java.io.Serializable;
 
 @Data
 public class OnBoardResponseDTO implements Serializable {
-    private int age;
-    private long aadhaarNumber;
+    private Integer age;
+    private Long aadhaarNumber;
     private String address;
     private Gender gender;
     private AccountType accountType;

@@ -5,6 +5,7 @@ import com.bankingservice.banking.enums.Gender;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 
 @Getter
 @Setter
@@ -16,13 +17,13 @@ import javax.persistence.*;
 public class UserOnBoardModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "age")
-    private int age;
+    private Integer age;
 
     @Column(name = "aadhaarNumber")
-    private long aadhaarNumber;
+    private Long aadhaarNumber;
 
     @Column(name = "address")
     private String address;
@@ -36,7 +37,7 @@ public class UserOnBoardModel {
     private AccountType accountType;
 
     @Column(name = "register_user_id")
-    private int registerUserId;
+    private Integer registerUserId;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "register_user_id", referencedColumnName = "id", insertable = false, updatable = false)

@@ -16,7 +16,7 @@ public class RegisterUserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private int id;
+    private Integer id;
 
     @Column(name = "name")
     private String name;
@@ -25,7 +25,7 @@ public class RegisterUserModel {
     private String email;
 
     @Column(name = "mobileNumber")
-    private long mobileNumber;
+    private Long mobileNumber;
 
     @Column(name = "userName", unique = true)
     private String userName;
