@@ -31,7 +31,7 @@ public class OnBoardRequestDTO implements Serializable {
      */
     private AccountType accountType;
     /**
-     * registerUserId is user's registerUserId
+     * userId is the user id which gets auto generated
      */
-    private Integer registerUserId;
+    private String userId;
 }

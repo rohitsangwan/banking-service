@@ -10,6 +10,7 @@ import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
 import com.bankingservice.banking.repository.RegisterUserRepository;
 import com.bankingservice.banking.repository.UserOnBoardRepository;
+import com.bankingservice.banking.services.servicehelper.AccountServiceHelper;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Tested;
@@ -35,6 +36,9 @@ public class AccountServiceTest {
     @Injectable
     private UserOnBoardRepository userOnBoardRepository;
 
+    @Injectable
+    private AccountServiceHelper accountServiceHelper;
+
     private List<RegisterUserModel> registerEntities;
     private RegisterUserModel registerUserModel;
     private UserOnBoardModel userOnBoardModel;
@@ -49,6 +53,7 @@ public class AccountServiceTest {
     private static final int registerUserId = RandomUtils.nextInt();
     private static final long aadhaarNumber = RandomUtils.nextLong();
     private static final String address = RandomStringUtils.randomAlphanumeric(10);
+    private static final String userId = RandomStringUtils.randomAlphanumeric(10);
 
 
     @BeforeMethod
@@ -60,26 +65,28 @@ public class AccountServiceTest {
         registerUserModel.setMobileNumber(mobileNumber);
         registerUserModel.setUserName(userName);
         registerUserModel.setPassword(password);
+        registerUserModel.setUserId(userId);
 
         RegisterUserModel registerUserModel1 = new RegisterUserModel();
         registerUserModel1.setId(id1);
-        registerUserModel.setName(name);
-        registerUserModel.setEmail(email);
-        registerUserModel.setMobileNumber(mobileNumber);
-        registerUserModel.setUserName(userName);
-        registerUserModel.setPassword(password);
+        registerUserModel1.setName(name);
+        registerUserModel1.setEmail(email);
+        registerUserModel1.setMobileNumber(mobileNumber);
+        registerUserModel1.setUserName(userName);
+        registerUserModel1.setPassword(password);
+        registerUserModel1.setUserId(userId);
 
         registerEntities = new ArrayList<>();
         registerEntities.add(registerUserModel);
         registerEntities.add(registerUserModel1);
 
         userOnBoardModel = new UserOnBoardModel();
+        userOnBoardModel.setId(id);
         userOnBoardModel.setAge(age);
         userOnBoardModel.setAadhaarNumber(aadhaarNumber);
         userOnBoardModel.setAddress(address);
         userOnBoardModel.setGender(Gender.MALE);
         userOnBoardModel.setAccountType(AccountType.CURRENT);
-        userOnBoardModel.setRegisterUserModel(registerUserModel);
         userOnBoardModel.setRegisterUserId(registerUserId);
     }
 
@@ -118,7 +125,7 @@ public class AccountServiceTest {
         onBoardRequestDTO.setAddress(address);
         onBoardRequestDTO.setGender(Gender.MALE);
         onBoardRequestDTO.setAccountType(AccountType.CURRENT);
-        onBoardRequestDTO.setRegisterUserId(registerUserId);
+        onBoardRequestDTO.setUserId(userId);
         return onBoardRequestDTO;
     }
 

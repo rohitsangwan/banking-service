@@ -47,7 +47,7 @@ public class AccountServiceHelper {
         logger.info("[makeRegisterUserResponseDTO] converting registerUserModel {} to registerUserResponseDTO", registerUserModel);
         RegisterUserResponseDTO registerUserResponseDTO = new RegisterUserResponseDTO();
         BeanUtils.copyProperties(registerUserModel, registerUserResponseDTO);
-        registerUserResponseDTO.setRegisterUserId(registerUserModel.getId());
+//        registerUserResponseDTO.setRegisterUserId(registerUserModel.getId());
         return registerUserResponseDTO;
     }
 
@@ -61,6 +61,10 @@ public class AccountServiceHelper {
         logger.info("[makeOnBoardingEntity] converting onBoardRequestDTO {} to userOnBoardModel", onBoardRequestDTO);
         UserOnBoardModel userOnBoardModel = new UserOnBoardModel();
         BeanUtils.copyProperties(onBoardRequestDTO, userOnBoardModel);
+        Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(onBoardRequestDTO.getUserId());
+        if(registerUserModel.isPresent()){
+            userOnBoardModel.setRegisterUserId(registerUserModel.get().getId());
+        }
         return userOnBoardModel;
     }
 
@@ -74,9 +78,10 @@ public class AccountServiceHelper {
         logger.info("[makeOnBoardingResponseDTO] converting userOnBoardModel {} to onBoardResponseDTO", userOnBoardModel);
         OnBoardResponseDTO onBoardResponseDTO = new OnBoardResponseDTO();
         BeanUtils.copyProperties(userOnBoardModel, onBoardResponseDTO);
-        Optional<RegisterUserModel> registerUser = registerUserRepository.findById(userOnBoardModel.getRegisterUserId());
-        if(registerUser.isPresent()){
-            onBoardResponseDTO.setRegisterUserModel(registerUser.get());
+        Optional<RegisterUserModel> registerUserModelOptional = registerUserRepository.findById(userOnBoardModel.getRegisterUserId());
+        if(registerUserModelOptional.isPresent()){
+            RegisterUserModel registerUserModel = registerUserModelOptional.get();
+            BeanUtils.copyProperties(registerUserModel, onBoardResponseDTO);
         }
         return onBoardResponseDTO;
     }

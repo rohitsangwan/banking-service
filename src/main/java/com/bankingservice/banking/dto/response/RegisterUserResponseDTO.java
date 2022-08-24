@@ -30,9 +30,4 @@ public class RegisterUserResponseDTO implements Serializable {
      * userId is the userId which will be auto generated and will be provided to the user
      */
     private String userId;
-    /**
-     * registerUserId is user's registration ID
-     */
-    private Integer registerUserId;
-
 }

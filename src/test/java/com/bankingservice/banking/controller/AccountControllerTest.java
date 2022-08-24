@@ -36,6 +36,7 @@ public class AccountControllerTest {
     private static final int age = RandomUtils.nextInt();
     private static final long aadhaarNumber = RandomUtils.nextLong();
     private static final String address = RandomStringUtils.randomAlphanumeric(10);
+    private static final String userId = RandomStringUtils.randomAlphanumeric(10);
 
     RegisterUserResponseDTO registerUserResponseDTO;
     RegisterRequestDTO registerRequestDTO;
@@ -50,6 +51,7 @@ public class AccountControllerTest {
         registerUserResponseDTO.setMobileNumber(mobileNumber);
         registerUserResponseDTO.setUserName(userName);
         registerUserResponseDTO.setPassword(password);
+        registerUserResponseDTO.setUserId(userId);
 
         registerRequestDTO = new RegisterRequestDTO();
         registerRequestDTO.setName(name);
@@ -72,6 +74,7 @@ public class AccountControllerTest {
         onBoardRequestDTO.setAccountType(AccountType.CURRENT);
         onBoardRequestDTO.setAadhaarNumber(aadhaarNumber);
         onBoardRequestDTO.setAddress(address);
+        onBoardRequestDTO.setUserId(userId);
 
         onBoardResponseDTO = new OnBoardResponseDTO();
         onBoardResponseDTO.setAge(age);
@@ -79,7 +82,11 @@ public class AccountControllerTest {
         onBoardResponseDTO.setAccountType(AccountType.CURRENT);
         onBoardResponseDTO.setAadhaarNumber(aadhaarNumber);
         onBoardResponseDTO.setAddress(address);
-        onBoardResponseDTO.setRegisterUserModel(registerUserModel);
+        onBoardResponseDTO.setName(name);
+        onBoardResponseDTO.setEmail(email);
+        onBoardResponseDTO.setUserName(userName);
+        onBoardResponseDTO.setPassword(password);
+        onBoardResponseDTO.setUserId(userId);
     }
 
     @Test

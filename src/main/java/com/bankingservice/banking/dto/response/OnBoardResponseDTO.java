@@ -10,6 +10,23 @@ import java.io.Serializable;
 @Data
 public class OnBoardResponseDTO implements Serializable {
 
+    private String name;
+    /**
+     * email is user's email ID which should be unique
+     */
+    private String email;
+    /**
+     * userName is user's userName which should be unique
+     */
+    private String userName;
+    /**
+     * password is password which will be set by the user
+     */
+    private String password;
+    /**
+     * userId is the userId which will be auto generated and will be provided to the user
+     */
+    private String userId;
     /**
      * age is user's age
      */
@@ -30,9 +47,4 @@ public class OnBoardResponseDTO implements Serializable {
      * accountType is type of account - CURRENT/SAVINGS/NRI_ACCOUNT
      */
     private AccountType accountType;
-    /**
-     * registerUserModel contains id, name, email, mobileNumber, userName, password, userId
-     */
-    private RegisterUserModel registerUserModel;
-
 }
