@@ -4,6 +4,8 @@ import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
 import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
+import com.bankingservice.banking.exception.ErrorCode;
+import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
 import com.bankingservice.banking.repository.RegisterUserRepository;
@@ -22,6 +24,7 @@ public class AccountServiceHelper {
     @Autowired
     private RegisterUserRepository registerUserRepository;
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceHelper.class);
+
     /**
      * convert registerRequestDTO to registerUserModel
      *
@@ -47,7 +50,6 @@ public class AccountServiceHelper {
         logger.info("[makeRegisterUserResponseDTO] converting registerUserModel {} to registerUserResponseDTO", registerUserModel);
         RegisterUserResponseDTO registerUserResponseDTO = new RegisterUserResponseDTO();
         BeanUtils.copyProperties(registerUserModel, registerUserResponseDTO);
-//        registerUserResponseDTO.setRegisterUserId(registerUserModel.getId());
         return registerUserResponseDTO;
     }
 
@@ -57,32 +59,38 @@ public class AccountServiceHelper {
      * @param onBoardRequestDTO
      * @return userOnBoardModel
      */
-    public UserOnBoardModel makeOnBoardingEntity(OnBoardRequestDTO onBoardRequestDTO) {
+    public UserOnBoardModel makeOnBoardingEntity(OnBoardRequestDTO onBoardRequestDTO) throws UserIdNotFoundException {
         logger.info("[makeOnBoardingEntity] converting onBoardRequestDTO {} to userOnBoardModel", onBoardRequestDTO);
         UserOnBoardModel userOnBoardModel = new UserOnBoardModel();
         BeanUtils.copyProperties(onBoardRequestDTO, userOnBoardModel);
         Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(onBoardRequestDTO.getUserId());
-        if(registerUserModel.isPresent()){
+        if (registerUserModel.isPresent()) {
             userOnBoardModel.setRegisterUserId(registerUserModel.get().getId());
+            return userOnBoardModel;
+        } else {
+            logger.debug("[makeOnBoardingEntity] user does not exist for userId: {}", onBoardRequestDTO.getUserId());
+            throw new UserIdNotFoundException(ErrorCode.USER_ID_NOT_FOUND, ErrorCode.USER_ID_NOT_FOUND.getErrorMessage(), ErrorCode.USER_ID_NOT_FOUND.getDisplayMessage());
         }
-        return userOnBoardModel;
     }
 
     /**
-     *
      * converting userOnBoardModel to onBoardResponseDTO
+     *
      * @param userOnBoardModel
      * @return onBoardResponseDTO
      */
-    public OnBoardResponseDTO makeOnBoardingResponseDTO(UserOnBoardModel userOnBoardModel) {
+    public OnBoardResponseDTO makeOnBoardingResponseDTO(UserOnBoardModel userOnBoardModel) throws UserIdNotFoundException {
         logger.info("[makeOnBoardingResponseDTO] converting userOnBoardModel {} to onBoardResponseDTO", userOnBoardModel);
         OnBoardResponseDTO onBoardResponseDTO = new OnBoardResponseDTO();
         BeanUtils.copyProperties(userOnBoardModel, onBoardResponseDTO);
         Optional<RegisterUserModel> registerUserModelOptional = registerUserRepository.findById(userOnBoardModel.getRegisterUserId());
-        if(registerUserModelOptional.isPresent()){
+        if (registerUserModelOptional.isPresent()) {
             RegisterUserModel registerUserModel = registerUserModelOptional.get();
             BeanUtils.copyProperties(registerUserModel, onBoardResponseDTO);
+            return onBoardResponseDTO;
+        } else {
+            logger.debug("[makeOnBoardingEntity] user does not exist for userId: {}", userOnBoardModel.getRegisterUserId());
+            throw new UserIdNotFoundException(ErrorCode.USER_ID_NOT_FOUND, ErrorCode.USER_ID_NOT_FOUND.getErrorMessage(), ErrorCode.USER_ID_NOT_FOUND.getDisplayMessage());
         }
-        return onBoardResponseDTO;
     }
 }

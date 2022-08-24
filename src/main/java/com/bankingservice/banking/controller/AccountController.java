@@ -4,6 +4,8 @@ import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.response.MetaDTO;
 import com.bankingservice.banking.dto.response.BaseResponseDTO;
+import com.bankingservice.banking.exception.InsertionFailedException;
+import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.services.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +31,7 @@ public class AccountController {
      * @return baseResponseDTO
      */
     @PostMapping("/register")
-    public BaseResponseDTO registerUser(@RequestBody RegisterRequestDTO registerRequestDTO){
+    public BaseResponseDTO registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) throws InsertionFailedException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         logger.info("[registerUser] user registration started");
         baseResponseDTO.setData(accountService.insertDetailsForRegistration(registerRequestDTO));
@@ -46,7 +48,7 @@ public class AccountController {
      */
 
     @PostMapping("/onboard")
-    public BaseResponseDTO onBoardUser(@RequestBody OnBoardRequestDTO onBoardRequestDTO){
+    public BaseResponseDTO onBoardUser(@RequestBody OnBoardRequestDTO onBoardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         logger.info("[onBoardUser] user on boarding started");
         baseResponseDTO.setData(accountService.insertDetailsForOnBoarding(onBoardRequestDTO));
@@ -54,7 +56,7 @@ public class AccountController {
         logger.info("[onBoardUser] On boarding completed!");
         return baseResponseDTO;
     }
-    
+
 
     /**
      * entry point controller to health check
@@ -78,6 +80,6 @@ public class AccountController {
      */
 
     private MetaDTO createMetaData(){
-        return new MetaDTO("123", "Mes", "Res", "Req");
+        return new MetaDTO("123", "Mes", "Res", "Req","Dis");
     }
 }

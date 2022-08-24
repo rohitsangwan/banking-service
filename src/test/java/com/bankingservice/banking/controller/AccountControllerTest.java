@@ -7,6 +7,8 @@ import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
 import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
 import com.bankingservice.banking.enums.AccountType;
 import com.bankingservice.banking.enums.Gender;
+import com.bankingservice.banking.exception.InsertionFailedException;
+import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.services.AccountService;
 import mockit.Expectations;
@@ -90,7 +92,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void testRegisterUser() {
+    public void testRegisterUser() throws InsertionFailedException {
         new Expectations() {{
             accountService.insertDetailsForRegistration((RegisterRequestDTO) any);
             result = registerUserResponseDTO;
@@ -106,7 +108,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void testOnBoardUser() {
+    public void testOnBoardUser() throws InsertionFailedException, UserIdNotFoundException {
         new Expectations() {{
             accountService.insertDetailsForOnBoarding((OnBoardRequestDTO) any);
             result = onBoardResponseDTO;

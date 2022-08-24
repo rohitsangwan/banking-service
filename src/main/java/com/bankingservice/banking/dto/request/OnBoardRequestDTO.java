@@ -2,10 +2,8 @@ package com.bankingservice.banking.dto.request;
 
 import com.bankingservice.banking.enums.AccountType;
 import com.bankingservice.banking.enums.Gender;
-import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import lombok.Data;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 @Data

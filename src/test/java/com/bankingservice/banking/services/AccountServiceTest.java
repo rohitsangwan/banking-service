@@ -6,6 +6,8 @@ import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
 import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
 import com.bankingservice.banking.enums.AccountType;
 import com.bankingservice.banking.enums.Gender;
+import com.bankingservice.banking.exception.InsertionFailedException;
+import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
 import com.bankingservice.banking.repository.RegisterUserRepository;
@@ -91,7 +93,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testInsertDetailsForRegistration() {
+    public void testInsertDetailsForRegistration() throws InsertionFailedException {
         new Expectations() {{
             registerUserRepository.save((RegisterUserModel) any);
             result = registerUserModel;
@@ -104,11 +106,53 @@ public class AccountServiceTest {
         }};
     }
 
+    @Test(expectedExceptions = InsertionFailedException.class)
+    public void testInsertDetailsForRegistrationException() throws InsertionFailedException {
+        new Expectations() {{
+            registerUserRepository.save((RegisterUserModel) any);
+            result = new InsertionFailedException();
+        }};
+        RegisterUserResponseDTO registerUserResponseDTO = accountService.insertDetailsForRegistration(makeRegisterRequestDTO());
+        Assert.assertNotNull(registerUserResponseDTO);
+        new Verifications() {{
+            registerUserRepository.save((RegisterUserModel) any);
+            times = 1;
+        }};
+    }
+
     @Test
-    void testInsertDetailsForOnBoarding() {
+    void testInsertDetailsForOnBoarding() throws InsertionFailedException, UserIdNotFoundException {
         new Expectations() {{
             userOnBoardRepository.save((UserOnBoardModel) any);
             result = userOnBoardModel;
+        }};
+        OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
+        Assert.assertNotNull(onBoardResponseDTO);
+        new Verifications() {{
+            userOnBoardRepository.save((UserOnBoardModel) any);
+            times = 1;
+        }};
+    }
+
+    @Test(expectedExceptions = InsertionFailedException.class)
+    public void testInsertDetailsForOnBoardingInsertionException() throws InsertionFailedException, UserIdNotFoundException {
+        new Expectations() {{
+            userOnBoardRepository.save((UserOnBoardModel) any);
+            result = new InsertionFailedException();
+        }};
+        OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
+        Assert.assertNotNull(onBoardResponseDTO);
+        new Verifications() {{
+            userOnBoardRepository.save((UserOnBoardModel) any);
+            times = 1;
+        }};
+    }
+
+    @Test(expectedExceptions = UserIdNotFoundException.class)
+    public void testInsertDetailsForOnBoardingIdNotFoundException() throws UserIdNotFoundException, InsertionFailedException {
+        new Expectations() {{
+            userOnBoardRepository.save((UserOnBoardModel) any);
+            result = new UserIdNotFoundException();
         }};
         OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
         Assert.assertNotNull(onBoardResponseDTO);

@@ -36,11 +36,11 @@ public class UserOnBoardModel {
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
-    @Column(name = "register_user_id")
+    @Column(name = "register_user_id", unique = true)
     private Integer registerUserId;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "register_user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "register_user_id", referencedColumnName = "id", insertable = false, updatable = false, unique = true)
     private RegisterUserModel registerUserModel;
 
 }

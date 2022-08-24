@@ -15,6 +15,7 @@ public class MetaDTO implements Serializable {
     private String message;
     private String responseId;
     private String requestId;
+    private String displayMessage;
 
     /**
      * Instantiates a new Meta dto
@@ -23,11 +24,13 @@ public class MetaDTO implements Serializable {
      * @param message
      * @param responseId
      * @param requestId
+     * @param displayMessage
      */
-    public MetaDTO(String code, String message, String responseId, String requestId) {
+    public MetaDTO(String code, String message, String responseId, String requestId, String displayMessage) {
         this.code = code;
         this.message = message;
         this.responseId = responseId;
         this.requestId = requestId;
+        this.displayMessage = displayMessage;
     }
 }
