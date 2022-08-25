@@ -4,28 +4,33 @@ import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
 import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
+import com.bankingservice.banking.exception.ErrorCode;
+import com.bankingservice.banking.exception.InsertionFailedException;
+import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
 import com.bankingservice.banking.repository.RegisterUserRepository;
 import com.bankingservice.banking.repository.UserOnBoardRepository;
-import com.bankingservice.banking.utils.UniqueValueUtil;
-import org.springframework.beans.BeanUtils;
+import com.bankingservice.banking.services.servicehelper.AccountServiceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Account Service
  */
 @Service
 public class AccountService {
+    private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
     @Autowired
     private RegisterUserRepository registerUserRepository;
 
     @Autowired
     private UserOnBoardRepository userOnBoardRepository;
+
+    @Autowired
+    private AccountServiceHelper accountServiceHelper;
 
     /**
      * insert details for user registration
@@ -33,12 +38,18 @@ public class AccountService {
      * @param registerRequestDTO
      * @return registerUserResponseDTO
      */
-
-    public RegisterUserResponseDTO insertDetailsForRegistration(RegisterRequestDTO registerRequestDTO) {
-        RegisterUserModel entity = registerUserRepository.save(makeRegisterEntity(registerRequestDTO));
-        RegisterUserResponseDTO registerUserResponseDTO = makeRegisterUserResponseDTO(entity);
-        return registerUserResponseDTO;
+    public RegisterUserResponseDTO insertDetailsForRegistration(RegisterRequestDTO registerRequestDTO) throws InsertionFailedException {
+        try {
+            logger.info("[insertDetailsForRegistration] Registering a new user: {}", registerRequestDTO);
+            RegisterUserModel entity = registerUserRepository.save(accountServiceHelper.makeRegisterEntity(registerRequestDTO));
+            RegisterUserResponseDTO registerUserResponseDTO = accountServiceHelper.makeRegisterUserResponseDTO(entity);
+            return registerUserResponseDTO;
+        } catch (Exception e) {
+            logger.error("[insertDetailsForRegistration] details insertion failed in mysql for request: {}", registerRequestDTO, e);
+            throw new InsertionFailedException(ErrorCode.USER_REGISTRATION_FAILED, ErrorCode.USER_REGISTRATION_FAILED.getErrorMessage(), ErrorCode.USER_REGISTRATION_FAILED.getDisplayMessage());
+        }
     }
+
 
     /**
      * insert details for user on boarding
@@ -46,41 +57,15 @@ public class AccountService {
      * @param onBoardRequestDTO
      * @return onBoardResponseDTO
      */
-
-    public OnBoardResponseDTO insertDetailsForOnBoarding(OnBoardRequestDTO onBoardRequestDTO) {
-        UserOnBoardModel user = userOnBoardRepository.save(makeOnBoardingEntity(onBoardRequestDTO));
-        OnBoardResponseDTO onBoardResponseDTO = makeOnBoardingResponseDTO(user);
-        return onBoardResponseDTO;
-    }
-
-    private RegisterUserModel makeRegisterEntity(RegisterRequestDTO registerRequestDTO) {
-        RegisterUserModel registerUserModel = new RegisterUserModel();
-        BeanUtils.copyProperties(registerRequestDTO, registerUserModel);
-        ArrayList<String> uniqueKeyList = UniqueValueUtil.generateUniqueId("REG", 1);
-        registerUserModel.setUserId(uniqueKeyList.get(0));
-        return registerUserModel;
-    }
-
-    private RegisterUserResponseDTO makeRegisterUserResponseDTO(RegisterUserModel entity) {
-        RegisterUserResponseDTO registerUserResponseDTO = new RegisterUserResponseDTO();
-        BeanUtils.copyProperties(entity, registerUserResponseDTO);
-        registerUserResponseDTO.setRegisterUserId(entity.getId());
-        return registerUserResponseDTO;
-    }
-
-    private OnBoardResponseDTO makeOnBoardingResponseDTO(UserOnBoardModel user) {
-            OnBoardResponseDTO onBoardResponseDTO = new OnBoardResponseDTO();
-            BeanUtils.copyProperties(user, onBoardResponseDTO);
-            Optional<RegisterUserModel> registerUser = registerUserRepository.findById(user.getRegisterUserId());
-            if(registerUser.isPresent()){
-                onBoardResponseDTO.setRegisterUserModel(registerUser.get());
-            }
+    public OnBoardResponseDTO insertDetailsForOnBoarding(OnBoardRequestDTO onBoardRequestDTO) throws UserIdNotFoundException {
+        try {
+            logger.info("[insertDetailsForOnBoarding] On boarding a user: {}", onBoardRequestDTO);
+            UserOnBoardModel user = userOnBoardRepository.save(accountServiceHelper.makeOnBoardingEntity(onBoardRequestDTO));
+            OnBoardResponseDTO onBoardResponseDTO = accountServiceHelper.makeOnBoardingResponseDTO(user);
             return onBoardResponseDTO;
-    }
-
-    private UserOnBoardModel makeOnBoardingEntity(OnBoardRequestDTO onBoardRequestDTO) {
-        UserOnBoardModel userOnBoardModel = new UserOnBoardModel();
-        BeanUtils.copyProperties(onBoardRequestDTO, userOnBoardModel);
-        return userOnBoardModel;
+        } catch (UserIdNotFoundException e) {
+            logger.error("[insertDetailsForOnBoarding] details insertion failed in mysql for request: {}", onBoardRequestDTO, e);
+            throw new UserIdNotFoundException(ErrorCode.USER_ONBOARD_FAILED, ErrorCode.USER_ONBOARD_FAILED.getErrorMessage(), ErrorCode.USER_ONBOARD_FAILED.getDisplayMessage());
+        }
     }
 }

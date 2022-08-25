@@ -6,10 +6,13 @@ import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
 import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
 import com.bankingservice.banking.enums.AccountType;
 import com.bankingservice.banking.enums.Gender;
+import com.bankingservice.banking.exception.InsertionFailedException;
+import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
 import com.bankingservice.banking.repository.RegisterUserRepository;
 import com.bankingservice.banking.repository.UserOnBoardRepository;
+import com.bankingservice.banking.services.servicehelper.AccountServiceHelper;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Tested;
@@ -21,7 +24,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +36,9 @@ public class AccountServiceTest {
 
     @Injectable
     private UserOnBoardRepository userOnBoardRepository;
+
+    @Injectable
+    private AccountServiceHelper accountServiceHelper;
 
     private List<RegisterUserModel> registerEntities;
     private RegisterUserModel registerUserModel;
@@ -49,6 +54,8 @@ public class AccountServiceTest {
     private static final int registerUserId = RandomUtils.nextInt();
     private static final long aadhaarNumber = RandomUtils.nextLong();
     private static final String address = RandomStringUtils.randomAlphanumeric(10);
+    private static final String userId = RandomStringUtils.randomAlphanumeric(10);
+    private static final String userId1 = RandomStringUtils.randomAlphanumeric(10);
 
 
     @BeforeMethod
@@ -60,31 +67,33 @@ public class AccountServiceTest {
         registerUserModel.setMobileNumber(mobileNumber);
         registerUserModel.setUserName(userName);
         registerUserModel.setPassword(password);
+        registerUserModel.setUserId(userId);
 
         RegisterUserModel registerUserModel1 = new RegisterUserModel();
         registerUserModel1.setId(id1);
-        registerUserModel.setName(name);
-        registerUserModel.setEmail(email);
-        registerUserModel.setMobileNumber(mobileNumber);
-        registerUserModel.setUserName(userName);
-        registerUserModel.setPassword(password);
+        registerUserModel1.setName(name);
+        registerUserModel1.setEmail(email);
+        registerUserModel1.setMobileNumber(mobileNumber);
+        registerUserModel1.setUserName(userName);
+        registerUserModel1.setPassword(password);
+        registerUserModel1.setUserId(userId);
 
         registerEntities = new ArrayList<>();
         registerEntities.add(registerUserModel);
         registerEntities.add(registerUserModel1);
 
         userOnBoardModel = new UserOnBoardModel();
+        userOnBoardModel.setId(id);
         userOnBoardModel.setAge(age);
         userOnBoardModel.setAadhaarNumber(aadhaarNumber);
         userOnBoardModel.setAddress(address);
         userOnBoardModel.setGender(Gender.MALE);
         userOnBoardModel.setAccountType(AccountType.CURRENT);
-        userOnBoardModel.setRegisterUserModel(registerUserModel);
         userOnBoardModel.setRegisterUserId(registerUserId);
     }
 
     @Test
-    public void testInsertDetailsForRegistration() {
+    public void testInsertDetailsForRegistration() throws InsertionFailedException {
         new Expectations() {{
             registerUserRepository.save((RegisterUserModel) any);
             result = registerUserModel;
@@ -97,11 +106,53 @@ public class AccountServiceTest {
         }};
     }
 
+    @Test(expectedExceptions = InsertionFailedException.class)
+    public void testInsertDetailsForRegistrationException() throws InsertionFailedException {
+        new Expectations() {{
+            registerUserRepository.save((RegisterUserModel) any);
+            result = new InsertionFailedException();
+        }};
+        RegisterUserResponseDTO registerUserResponseDTO = accountService.insertDetailsForRegistration(makeRegisterRequestDTO());
+        Assert.assertNotNull(registerUserResponseDTO);
+        new Verifications() {{
+            registerUserRepository.save((RegisterUserModel) any);
+            times = 1;
+        }};
+    }
+
     @Test
-    void testInsertDetailsForOnBoarding() {
+    void testInsertDetailsForOnBoarding() throws InsertionFailedException, UserIdNotFoundException {
         new Expectations() {{
             userOnBoardRepository.save((UserOnBoardModel) any);
             result = userOnBoardModel;
+        }};
+        OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
+        Assert.assertNotNull(onBoardResponseDTO);
+        new Verifications() {{
+            userOnBoardRepository.save((UserOnBoardModel) any);
+            times = 1;
+        }};
+    }
+
+    @Test(expectedExceptions = InsertionFailedException.class)
+    public void testInsertDetailsForOnBoardingInsertionException() throws InsertionFailedException, UserIdNotFoundException {
+        new Expectations() {{
+            userOnBoardRepository.save((UserOnBoardModel) any);
+            result = new InsertionFailedException();
+        }};
+        OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
+        Assert.assertNotNull(onBoardResponseDTO);
+        new Verifications() {{
+            userOnBoardRepository.save((UserOnBoardModel) any);
+            times = 1;
+        }};
+    }
+
+    @Test(expectedExceptions = UserIdNotFoundException.class)
+    public void testInsertDetailsForOnBoardingIdNotFoundException() throws UserIdNotFoundException, InsertionFailedException {
+        new Expectations() {{
+            userOnBoardRepository.save((UserOnBoardModel) any);
+            result = new UserIdNotFoundException();
         }};
         OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
         Assert.assertNotNull(onBoardResponseDTO);
@@ -118,7 +169,7 @@ public class AccountServiceTest {
         onBoardRequestDTO.setAddress(address);
         onBoardRequestDTO.setGender(Gender.MALE);
         onBoardRequestDTO.setAccountType(AccountType.CURRENT);
-        onBoardRequestDTO.setRegisterUserId(registerUserId);
+        onBoardRequestDTO.setUserId(userId);
         return onBoardRequestDTO;
     }
 

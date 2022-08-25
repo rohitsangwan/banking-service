@@ -7,6 +7,8 @@ import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
 import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
 import com.bankingservice.banking.enums.AccountType;
 import com.bankingservice.banking.enums.Gender;
+import com.bankingservice.banking.exception.InsertionFailedException;
+import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.services.AccountService;
 import mockit.Expectations;
@@ -36,6 +38,7 @@ public class AccountControllerTest {
     private static final int age = RandomUtils.nextInt();
     private static final long aadhaarNumber = RandomUtils.nextLong();
     private static final String address = RandomStringUtils.randomAlphanumeric(10);
+    private static final String userId = RandomStringUtils.randomAlphanumeric(10);
 
     RegisterUserResponseDTO registerUserResponseDTO;
     RegisterRequestDTO registerRequestDTO;
@@ -50,6 +53,7 @@ public class AccountControllerTest {
         registerUserResponseDTO.setMobileNumber(mobileNumber);
         registerUserResponseDTO.setUserName(userName);
         registerUserResponseDTO.setPassword(password);
+        registerUserResponseDTO.setUserId(userId);
 
         registerRequestDTO = new RegisterRequestDTO();
         registerRequestDTO.setName(name);
@@ -72,6 +76,7 @@ public class AccountControllerTest {
         onBoardRequestDTO.setAccountType(AccountType.CURRENT);
         onBoardRequestDTO.setAadhaarNumber(aadhaarNumber);
         onBoardRequestDTO.setAddress(address);
+        onBoardRequestDTO.setUserId(userId);
 
         onBoardResponseDTO = new OnBoardResponseDTO();
         onBoardResponseDTO.setAge(age);
@@ -79,16 +84,20 @@ public class AccountControllerTest {
         onBoardResponseDTO.setAccountType(AccountType.CURRENT);
         onBoardResponseDTO.setAadhaarNumber(aadhaarNumber);
         onBoardResponseDTO.setAddress(address);
-        onBoardResponseDTO.setRegisterUserModel(registerUserModel);
+        onBoardResponseDTO.setName(name);
+        onBoardResponseDTO.setEmail(email);
+        onBoardResponseDTO.setUserName(userName);
+        onBoardResponseDTO.setPassword(password);
+        onBoardResponseDTO.setUserId(userId);
     }
 
     @Test
-    public void testRegisterUser() {
+    public void testRegisterUser() throws InsertionFailedException {
         new Expectations() {{
             accountService.insertDetailsForRegistration((RegisterRequestDTO) any);
             result = registerUserResponseDTO;
         }};
-        BaseResponseDTO baseResponseDTO = accountController.registerUser(registerRequestDTO);
+        BaseResponseDTO baseResponseDTO = accountController.registerUser(registerRequestDTO).getBody();
         Assert.assertNotNull(baseResponseDTO);
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
@@ -99,12 +108,12 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void testOnBoardUser() {
+    public void testOnBoardUser() throws InsertionFailedException, UserIdNotFoundException {
         new Expectations() {{
             accountService.insertDetailsForOnBoarding((OnBoardRequestDTO) any);
             result = onBoardResponseDTO;
         }};
-        BaseResponseDTO baseResponseDTO = accountController.onBoardUser(onBoardRequestDTO);
+        BaseResponseDTO baseResponseDTO = accountController.onBoardUser(onBoardRequestDTO).getBody();
         Assert.assertNotNull(baseResponseDTO);
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
@@ -116,7 +125,7 @@ public class AccountControllerTest {
 
     @Test
     public void healthCheckTest() {
-        BaseResponseDTO baseResponseDTO = accountController.healthCheck();
+        BaseResponseDTO baseResponseDTO = accountController.healthCheck().getBody();
         Assert.assertNotNull(baseResponseDTO);
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
