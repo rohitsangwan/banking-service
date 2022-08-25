@@ -1,0 +1,246 @@
+2022-08-25 18:04:36,704 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter [restartedMain] ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2022-08-25 18:04:36,821 TRACE org.springframework.web.servlet.handler.AbstractHandlerMethodMapping [restartedMain] 
+	c.b.b.c.AccountController:
+	{POST [/account/v1/register]}: registerUser(RegisterRequestDTO)
+	{POST [/account/v1/onboard]}: onBoardUser(OnBoardRequestDTO)
+	{GET [/account/v1/health]}: healthCheck()
+2022-08-25 18:04:36,828 TRACE org.springframework.web.servlet.handler.AbstractHandlerMethodMapping [restartedMain] 
+	o.s.b.a.w.s.e.BasicErrorController:
+	{ [/error], produces [text/html]}: errorHtml(HttpServletRequest,HttpServletResponse)
+	{ [/error]}: error(HttpServletRequest)
+2022-08-25 18:04:36,831 DEBUG org.springframework.web.servlet.handler.AbstractHandlerMethodMapping [restartedMain] 5 mappings in 'requestMappingHandlerMapping'
+2022-08-25 18:04:36,856 DEBUG org.springframework.web.servlet.handler.AbstractDetectingUrlHandlerMapping [restartedMain] Detected 0 mappings in 'beanNameHandlerMapping'
+2022-08-25 18:04:36,879 TRACE org.springframework.web.servlet.function.support.RouterFunctionMapping [restartedMain] 0 RouterFunction(s) in 'routerFunctionMapping'
+2022-08-25 18:04:36,904 TRACE org.springframework.web.servlet.handler.AbstractUrlHandlerMapping [restartedMain] Mapped [/webjars/**] onto ResourceHttpRequestHandler [classpath [META-INF/resources/webjars/]]
+2022-08-25 18:04:36,904 TRACE org.springframework.web.servlet.handler.AbstractUrlHandlerMapping [restartedMain] Mapped [/**] onto ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2022-08-25 18:04:36,905 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [restartedMain] Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2022-08-25 18:04:36,936 DEBUG org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver [restartedMain] ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2022-08-25 18:05:30,133 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting BankingApplication using Java 1.8.0_341 on 197NODMB41169.local with PID 46961 (/Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking/build/classes/java/main started by rohitsangwan in /Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking)
+2022-08-25 18:05:30,143 DEBUG org.springframework.boot.StartupInfoLogger [restartedMain] Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-08-25 18:05:30,146 INFO org.springframework.boot.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2022-08-25 18:05:38,663 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Started BankingApplication in 9.129 seconds (JVM running for 9.997)
+2022-08-25 18:05:53,508 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-4] [onBoardUser] user on boarding started
+2022-08-25 18:05:53,509 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-4] [insertDetailsForOnBoarding] On boarding a user: OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG2051941130)
+2022-08-25 18:05:53,510 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [makeOnBoardingEntity] converting onBoardRequestDTO OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG2051941130) to userOnBoardModel
+2022-08-25 18:05:53,808 ERROR com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [makeOnBoardingEntity] user does not exist for userId: REG2051941130
+2022-08-25 18:05:53,815 ERROR com.bankingservice.banking.services.AccountService [http-nio-9191-exec-4] [insertDetailsForOnBoarding] details insertion failed in mysql for request: OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG2051941130)
+com.bankingservice.banking.exception.UserIdNotFoundException: null
+	at com.bankingservice.banking.services.servicehelper.AccountServiceHelper.makeOnBoardingEntity(AccountServiceHelper.java:122)
+	at com.bankingservice.banking.services.AccountService.insertDetailsForOnBoarding(AccountService.java:60)
+	at com.bankingservice.banking.controller.AccountController.onBoardUser(AccountController.java:60)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1070)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:681)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:764)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:890)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1789)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:750)
+2022-08-25 18:05:53,824 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-4] UserIdNotFoundException: [Ljava.lang.StackTraceElement;@27d2cd41
+2022-08-25 18:07:41,011 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-5] [onBoardUser] user on boarding started
+2022-08-25 18:07:41,019 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-5] [insertDetailsForOnBoarding] On boarding a user: OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG2051941130)
+2022-08-25 18:07:41,020 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-5] [makeOnBoardingEntity] converting onBoardRequestDTO OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG2051941130) to userOnBoardModel
+2022-08-25 18:07:41,051 ERROR com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-5] [makeOnBoardingEntity] user does not exist for userId: REG2051941130
+2022-08-25 18:07:41,055 ERROR com.bankingservice.banking.services.AccountService [http-nio-9191-exec-5] [insertDetailsForOnBoarding] details insertion failed in mysql for request: OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG2051941130)
+com.bankingservice.banking.exception.UserIdNotFoundException: null
+	at com.bankingservice.banking.services.servicehelper.AccountServiceHelper.makeOnBoardingEntity(AccountServiceHelper.java:122)
+	at com.bankingservice.banking.services.AccountService.insertDetailsForOnBoarding(AccountService.java:60)
+	at com.bankingservice.banking.controller.AccountController.onBoardUser(AccountController.java:60)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1070)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:681)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:764)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:890)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1789)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:750)
+2022-08-25 18:07:41,059 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-5] UserIdNotFoundException: [Ljava.lang.StackTraceElement;@694a7574
+2022-08-25 18:08:11,557 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-6] [onBoardUser] user on boarding started
+2022-08-25 18:08:11,563 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-6] [insertDetailsForOnBoarding] On boarding a user: OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG20519411350)
+2022-08-25 18:08:11,564 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-6] [makeOnBoardingEntity] converting onBoardRequestDTO OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG20519411350) to userOnBoardModel
+2022-08-25 18:08:11,596 ERROR com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-6] [makeOnBoardingEntity] user does not exist for userId: REG20519411350
+2022-08-25 18:08:11,599 ERROR com.bankingservice.banking.services.AccountService [http-nio-9191-exec-6] [insertDetailsForOnBoarding] details insertion failed in mysql for request: OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG20519411350)
+com.bankingservice.banking.exception.UserIdNotFoundException: null
+	at com.bankingservice.banking.services.servicehelper.AccountServiceHelper.makeOnBoardingEntity(AccountServiceHelper.java:122)
+	at com.bankingservice.banking.services.AccountService.insertDetailsForOnBoarding(AccountService.java:60)
+	at com.bankingservice.banking.controller.AccountController.onBoardUser(AccountController.java:60)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1070)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:681)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:764)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:890)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1789)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:750)
+2022-08-25 18:08:11,603 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-6] UserIdNotFoundException: [Ljava.lang.StackTraceElement;@4f1e7df2
+2022-08-25 18:14:43,167 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting BankingApplication using Java 1.8.0_341 on 197NODMB41169.local with PID 55437 (/Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking/build/classes/java/main started by rohitsangwan in /Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking)
+2022-08-25 18:14:43,174 DEBUG org.springframework.boot.StartupInfoLogger [restartedMain] Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-08-25 18:14:43,176 INFO org.springframework.boot.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2022-08-25 18:14:51,680 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Started BankingApplication in 9.117 seconds (JVM running for 10.024)
+2022-08-25 18:26:02,197 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting BankingApplication using Java 1.8.0_341 on 197NODMB41169.local with PID 66245 (/Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking/build/classes/java/main started by rohitsangwan in /Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking)
+2022-08-25 18:26:02,203 DEBUG org.springframework.boot.StartupInfoLogger [restartedMain] Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-08-25 18:26:02,204 INFO org.springframework.boot.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2022-08-25 18:26:10,961 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Started BankingApplication in 9.442 seconds (JVM running for 10.431)
+2022-08-25 18:26:18,327 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-3] [registerUser] user registration started
+2022-08-25 18:26:18,330 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-3] [insertDetailsForRegistration] Registering a new user: RegisterRequestDTO(name=leo, email=leo@gmail.com, mobileNumber=123456, userName=leoemes, password=leo@098)
+2022-08-25 18:26:18,330 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [makeRegisterEntity] converting registerRequestDTO RegisterRequestDTO(name=leo, email=leo@gmail.com, mobileNumber=123456, userName=leoemes, password=leo@098) to registerUserModel
+2022-08-25 18:26:18,422 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [saveRegisterModel] saving the registration details for user: RegisterUserModel(id=null, name=leo, email=leo@gmail.com, mobileNumber=123456, userName=leoemes, password=leo@098, userId=REG1730225068, userOnBoardModel=null)
+2022-08-25 18:26:18,565 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [saveRegisterModel] username/email already exists for user: RegisterUserModel(id=null, name=leo, email=leo@gmail.com, mobileNumber=123456, userName=leoemes, password=leo@098, userId=REG1730225068, userOnBoardModel=null)
+2022-08-25 18:26:18,572 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-3] InsertionFailedException: [Ljava.lang.StackTraceElement;@3ce7c897
+2022-08-25 18:26:31,617 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-1] [registerUser] user registration started
+2022-08-25 18:26:31,622 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-1] [insertDetailsForRegistration] Registering a new user: RegisterRequestDTO(name=null, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098)
+2022-08-25 18:26:31,623 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-1] [makeRegisterEntity] converting registerRequestDTO RegisterRequestDTO(name=null, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098) to registerUserModel
+2022-08-25 18:26:31,630 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-1] [saveRegisterModel] saving the registration details for user: RegisterUserModel(id=null, name=null, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098, userId=REG99577459, userOnBoardModel=null)
+2022-08-25 18:26:31,674 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-1] [saveRegisterModel] registration details saved for user: RegisterUserModel(id=6, name=null, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098, userId=REG99577459, userOnBoardModel=null)
+2022-08-25 18:26:31,674 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-1] [makeRegisterUserResponseDTO] converting registerUserModel RegisterUserModel(id=6, name=null, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098, userId=REG99577459, userOnBoardModel=null) to registerUserResponseDTO
+2022-08-25 18:26:31,690 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-1] [registerUser] user successfully registered
+2022-08-25 18:27:11,249 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting BankingApplication using Java 1.8.0_341 on 197NODMB41169.local with PID 67245 (/Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking/build/classes/java/main started by rohitsangwan in /Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking)
+2022-08-25 18:27:11,253 DEBUG org.springframework.boot.StartupInfoLogger [restartedMain] Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-08-25 18:27:11,254 INFO org.springframework.boot.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2022-08-25 18:27:19,593 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Started BankingApplication in 8.961 seconds (JVM running for 9.855)
+2022-08-25 18:27:23,779 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-1] [registerUser] user registration started
+2022-08-25 18:27:23,780 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-1] [insertDetailsForRegistration] Registering a new user: RegisterRequestDTO(name=null, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098)
+2022-08-25 18:27:23,781 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-1] [makeRegisterEntity] converting registerRequestDTO RegisterRequestDTO(name=null, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098) to registerUserModel
+2022-08-25 18:27:23,825 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-1] [saveRegisterModel] saving the registration details for user: RegisterUserModel(id=null, name=null, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098, userId=REG-228577832, userOnBoardModel=null)
+2022-08-25 18:27:23,970 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-1] [saveRegisterModel] registration details saved for user: RegisterUserModel(id=1, name=null, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098, userId=REG-228577832, userOnBoardModel=null)
+2022-08-25 18:27:23,973 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-1] [makeRegisterUserResponseDTO] converting registerUserModel RegisterUserModel(id=1, name=null, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098, userId=REG-228577832, userOnBoardModel=null) to registerUserResponseDTO
+2022-08-25 18:27:24,048 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-1] [registerUser] user successfully registered
+2022-08-25 18:27:37,242 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-3] [registerUser] user registration started
+2022-08-25 18:27:37,248 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-3] [insertDetailsForRegistration] Registering a new user: RegisterRequestDTO(name=, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098)
+2022-08-25 18:27:37,250 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [makeRegisterEntity] converting registerRequestDTO RegisterRequestDTO(name=, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098) to registerUserModel
+2022-08-25 18:27:37,256 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [saveRegisterModel] saving the registration details for user: RegisterUserModel(id=null, name=, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098, userId=REG1796818751, userOnBoardModel=null)
+2022-08-25 18:27:37,311 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [saveRegisterModel] username/email already exists for user: RegisterUserModel(id=null, name=, email=leo@gmail.com1, mobileNumber=123456, userName=leoemes1, password=leo@098, userId=REG1796818751, userOnBoardModel=null)
+2022-08-25 18:27:37,317 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-3] InsertionFailedException: [Ljava.lang.StackTraceElement;@611c564f
+2022-08-25 18:27:44,797 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-4] [registerUser] user registration started
+2022-08-25 18:27:44,799 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-4] [insertDetailsForRegistration] Registering a new user: RegisterRequestDTO(name=, email=leo@gmail.com, mobileNumber=123456, userName=leoemes, password=leo@098)
+2022-08-25 18:27:44,799 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [makeRegisterEntity] converting registerRequestDTO RegisterRequestDTO(name=, email=leo@gmail.com, mobileNumber=123456, userName=leoemes, password=leo@098) to registerUserModel
+2022-08-25 18:27:44,801 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [saveRegisterModel] saving the registration details for user: RegisterUserModel(id=null, name=, email=leo@gmail.com, mobileNumber=123456, userName=leoemes, password=leo@098, userId=REG39780324, userOnBoardModel=null)
+2022-08-25 18:27:44,815 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [saveRegisterModel] registration details saved for user: RegisterUserModel(id=3, name=, email=leo@gmail.com, mobileNumber=123456, userName=leoemes, password=leo@098, userId=REG39780324, userOnBoardModel=null)
+2022-08-25 18:27:44,816 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [makeRegisterUserResponseDTO] converting registerUserModel RegisterUserModel(id=3, name=, email=leo@gmail.com, mobileNumber=123456, userName=leoemes, password=leo@098, userId=REG39780324, userOnBoardModel=null) to registerUserResponseDTO
+2022-08-25 18:27:44,816 INFO com.bankingservice.banking.controller.AccountController [http-nio-9191-exec-4] [registerUser] user successfully registered

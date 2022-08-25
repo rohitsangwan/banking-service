@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.*;
+
 
 @ControllerAdvice
 public class ApplicationExceptionHandler {
@@ -21,7 +21,7 @@ public class ApplicationExceptionHandler {
      */
     @ExceptionHandler(InsertionFailedException.class)
     public ResponseEntity<BaseResponseDTO> handleInsertionFailedException(InsertionFailedException e){
-        logger.error("InsertionFailedException: " + e);
+        logger.error("InsertionFailedException: " + e.getStackTrace());
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), "responseId", "requestId"));
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
@@ -35,9 +35,10 @@ public class ApplicationExceptionHandler {
      */
     @ExceptionHandler(UserIdNotFoundException.class)
     public ResponseEntity<BaseResponseDTO> handleUserIdNotFoundException(UserIdNotFoundException e){
-        logger.error("UserIdNotFoundException: " +  e);
+        logger.error("UserIdNotFoundException: " +  e.getStackTrace());
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), "responseId", "requestId"));
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
     }
+
 }

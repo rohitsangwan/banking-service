@@ -19,6 +19,7 @@ import mockit.Tested;
 import mockit.Verifications;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -95,13 +96,13 @@ public class AccountServiceTest {
     @Test
     public void testInsertDetailsForRegistration() throws InsertionFailedException {
         new Expectations() {{
-            registerUserRepository.save((RegisterUserModel) any);
+            accountServiceHelper.saveRegisterModel((RegisterUserModel) any);
             result = registerUserModel;
         }};
         RegisterUserResponseDTO registerUserResponseDTO = accountService.insertDetailsForRegistration(makeRegisterRequestDTO());
         Assert.assertNotNull(registerUserResponseDTO);
         new Verifications() {{
-            registerUserRepository.save((RegisterUserModel) any);
+            accountServiceHelper.saveRegisterModel((RegisterUserModel) any);
             times = 1;
         }};
     }
@@ -109,13 +110,13 @@ public class AccountServiceTest {
     @Test(expectedExceptions = InsertionFailedException.class)
     public void testInsertDetailsForRegistrationException() throws InsertionFailedException {
         new Expectations() {{
-            registerUserRepository.save((RegisterUserModel) any);
-            result = new InsertionFailedException();
+            accountServiceHelper.saveRegisterModel((RegisterUserModel) any);
+            result = new DataIntegrityViolationException("");
         }};
         RegisterUserResponseDTO registerUserResponseDTO = accountService.insertDetailsForRegistration(makeRegisterRequestDTO());
         Assert.assertNotNull(registerUserResponseDTO);
         new Verifications() {{
-            registerUserRepository.save((RegisterUserModel) any);
+            accountServiceHelper.saveRegisterModel((RegisterUserModel) any);
             times = 1;
         }};
     }
@@ -123,13 +124,13 @@ public class AccountServiceTest {
     @Test
     void testInsertDetailsForOnBoarding() throws InsertionFailedException, UserIdNotFoundException {
         new Expectations() {{
-            userOnBoardRepository.save((UserOnBoardModel) any);
+            accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             result = userOnBoardModel;
         }};
         OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
         Assert.assertNotNull(onBoardResponseDTO);
         new Verifications() {{
-            userOnBoardRepository.save((UserOnBoardModel) any);
+            accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             times = 1;
         }};
     }
@@ -137,13 +138,13 @@ public class AccountServiceTest {
     @Test(expectedExceptions = InsertionFailedException.class)
     public void testInsertDetailsForOnBoardingInsertionException() throws InsertionFailedException, UserIdNotFoundException {
         new Expectations() {{
-            userOnBoardRepository.save((UserOnBoardModel) any);
-            result = new InsertionFailedException();
+            accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
+            result = new DataIntegrityViolationException("");
         }};
         OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
         Assert.assertNotNull(onBoardResponseDTO);
         new Verifications() {{
-            userOnBoardRepository.save((UserOnBoardModel) any);
+            accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             times = 1;
         }};
     }
@@ -151,13 +152,13 @@ public class AccountServiceTest {
     @Test(expectedExceptions = UserIdNotFoundException.class)
     public void testInsertDetailsForOnBoardingIdNotFoundException() throws UserIdNotFoundException, InsertionFailedException {
         new Expectations() {{
-            userOnBoardRepository.save((UserOnBoardModel) any);
+            accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             result = new UserIdNotFoundException();
         }};
         OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
         Assert.assertNotNull(onBoardResponseDTO);
         new Verifications() {{
-            userOnBoardRepository.save((UserOnBoardModel) any);
+            accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             times = 1;
         }};
     }
