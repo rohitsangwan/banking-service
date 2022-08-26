@@ -79,8 +79,8 @@ public class AccountServiceHelper {
      * @param registerRequestDTO
      * @return registerUserModel
      */
-    public RegisterUserModel makeRegisterEntity(RegisterRequestDTO registerRequestDTO) {
-        logger.info("[makeRegisterEntity] converting registerRequestDTO {} to registerUserModel", registerRequestDTO);
+    public RegisterUserModel convertDtoToRegisterUserModel(RegisterRequestDTO registerRequestDTO) {
+        logger.info("[convertDtoToRegisterUserModel] converting registerRequestDTO {} to registerUserModel", registerRequestDTO);
         RegisterUserModel registerUserModel = new RegisterUserModel();
         BeanUtils.copyProperties(registerRequestDTO, registerUserModel);
         ArrayList<String> uniqueKeyList = UniqueValueUtil.generateUniqueId(REG, 1);
@@ -94,8 +94,8 @@ public class AccountServiceHelper {
      * @param registerUserModel
      * @return registerUserResponseDTO
      */
-    public RegisterUserResponseDTO makeRegisterUserResponseDTO(RegisterUserModel registerUserModel) {
-        logger.info("[makeRegisterUserResponseDTO] converting registerUserModel {} to registerUserResponseDTO", registerUserModel);
+    public RegisterUserResponseDTO convertModelToRegisterResponseDto(RegisterUserModel registerUserModel) {
+        logger.info("[convertModelToRegisterResponseDto] converting registerUserModel {} to registerUserResponseDTO", registerUserModel);
         RegisterUserResponseDTO registerUserResponseDTO = new RegisterUserResponseDTO();
         BeanUtils.copyProperties(registerUserModel, registerUserResponseDTO);
         return registerUserResponseDTO;
@@ -107,8 +107,8 @@ public class AccountServiceHelper {
      * @param onBoardRequestDTO
      * @return userOnBoardModel
      */
-    public UserOnBoardModel makeOnBoardingEntity(OnBoardRequestDTO onBoardRequestDTO) throws UserIdNotFoundException {
-        logger.info("[makeOnBoardingEntity] converting onBoardRequestDTO {} to userOnBoardModel", onBoardRequestDTO);
+    public UserOnBoardModel convertDtoToUserOnBoardModel(OnBoardRequestDTO onBoardRequestDTO) throws UserIdNotFoundException {
+        logger.info("[convertDtoToUserOnBoardModel] converting onBoardRequestDTO {} to userOnBoardModel", onBoardRequestDTO);
         UserOnBoardModel userOnBoardModel = new UserOnBoardModel();
         BeanUtils.copyProperties(onBoardRequestDTO, userOnBoardModel);
         Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(onBoardRequestDTO.getUserId());
@@ -116,7 +116,7 @@ public class AccountServiceHelper {
             userOnBoardModel.setRegisterUserId(registerUserModel.get().getId());
             return userOnBoardModel;
         } else {
-            logger.error("[makeOnBoardingEntity] user does not exist for userId: {}", onBoardRequestDTO.getUserId());
+            logger.error("[convertDtoToUserOnBoardModel] user does not exist for userId: {}", onBoardRequestDTO.getUserId());
             throw new UserIdNotFoundException(ErrorCode.USER_ID_NOT_FOUND,
                     String.format(ErrorCode.USER_ID_NOT_FOUND.getErrorMessage(), onBoardRequestDTO.getUserId()),
                     ErrorCode.USER_ID_NOT_FOUND.getDisplayMessage());
@@ -129,8 +129,8 @@ public class AccountServiceHelper {
      * @param userOnBoardModel
      * @return onBoardResponseDTO
      */
-    public OnBoardResponseDTO makeOnBoardingResponseDTO(UserOnBoardModel userOnBoardModel) throws UserIdNotFoundException {
-        logger.info("[makeOnBoardingResponseDTO] converting userOnBoardModel {} to onBoardResponseDTO", userOnBoardModel);
+    public OnBoardResponseDTO convertModelToOnBoardResponseDto(UserOnBoardModel userOnBoardModel) throws UserIdNotFoundException {
+        logger.info("[convertModelToOnBoardResponseDto] converting userOnBoardModel {} to onBoardResponseDTO", userOnBoardModel);
         OnBoardResponseDTO onBoardResponseDTO = new OnBoardResponseDTO();
         BeanUtils.copyProperties(userOnBoardModel, onBoardResponseDTO);
         Optional<RegisterUserModel> registerUserModelOptional = registerUserRepository.findById(userOnBoardModel.getRegisterUserId());
@@ -139,7 +139,7 @@ public class AccountServiceHelper {
             BeanUtils.copyProperties(registerUserModel, onBoardResponseDTO);
             return onBoardResponseDTO;
         } else {
-            logger.error("[makeOnBoardingEntity] user does not exist for userId: {}", userOnBoardModel.getRegisterUserId());
+            logger.error("[convertModelToOnBoardResponseDto] user does not exist for userId: {}", userOnBoardModel.getRegisterUserId());
             throw new UserIdNotFoundException(ErrorCode.USER_ID_NOT_FOUND,
                     String.format(ErrorCode.USER_ID_NOT_FOUND.getErrorMessage(), userOnBoardModel.getRegisterUserId()),
                     ErrorCode.USER_ID_NOT_FOUND.getDisplayMessage());

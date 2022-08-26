@@ -34,9 +34,9 @@ public class AccountService {
     public RegisterUserResponseDTO insertDetailsForRegistration(RegisterRequestDTO registerRequestDTO) throws InsertionFailedException, DataIntegrityViolationException {
         try {
             logger.info("[insertDetailsForRegistration] Registering a new user: {}", registerRequestDTO);
-            RegisterUserModel entity = accountServiceHelper.makeRegisterEntity(registerRequestDTO);
+            RegisterUserModel entity = accountServiceHelper.convertDtoToRegisterUserModel(registerRequestDTO);
             RegisterUserModel registerUserModel = accountServiceHelper.saveRegisterModel(entity);
-            RegisterUserResponseDTO registerUserResponseDTO = accountServiceHelper.makeRegisterUserResponseDTO(registerUserModel);
+            RegisterUserResponseDTO registerUserResponseDTO = accountServiceHelper.convertModelToRegisterResponseDto(registerUserModel);
             return registerUserResponseDTO;
         } catch (DataIntegrityViolationException e) {
             logger.error("[insertDetailsForRegistration] details insertion failed in db for request: {}", registerRequestDTO, e);
@@ -47,30 +47,25 @@ public class AccountService {
     }
 
 
-        /**
-         * insert details for user on boarding
-         *
-         * @param onBoardRequestDTO
-         * @return onBoardResponseDTO
-         */
-        public OnBoardResponseDTO insertDetailsForOnBoarding (OnBoardRequestDTO onBoardRequestDTO) throws
-                UserIdNotFoundException, InsertionFailedException {
-            try {
-                logger.info("[insertDetailsForOnBoarding] On boarding a user: {}", onBoardRequestDTO);
-                UserOnBoardModel user = accountServiceHelper.makeOnBoardingEntity(onBoardRequestDTO);
-                UserOnBoardModel userOnBoardModel = accountServiceHelper.saveOnBoardModel(user);
-                OnBoardResponseDTO onBoardResponseDTO = accountServiceHelper.makeOnBoardingResponseDTO(userOnBoardModel);
-                return onBoardResponseDTO;
-            } catch (UserIdNotFoundException e) {
-                logger.error("[insertDetailsForOnBoarding] details insertion failed in mysql for request: {}", onBoardRequestDTO, e);
-                throw new UserIdNotFoundException(ErrorCode.USER_ONBOARD_FAILED,
-                        ErrorCode.USER_ONBOARD_FAILED.getErrorMessage(),
-                        ErrorCode.USER_ONBOARD_FAILED.getDisplayMessage());
-            } catch (DataIntegrityViolationException | InsertionFailedException e) {
-                logger.info("[saveRegisterModel] account already exists for userId: {}", onBoardRequestDTO.getUserId());
-                throw new InsertionFailedException(ErrorCode.USER_ONBOARD_FAILED,
-                        ErrorCode.USER_ONBOARD_FAILED.getErrorMessage(),
-                        ErrorCode.USER_ONBOARD_FAILED.getDisplayMessage());
-            }
+    /**
+     * insert details for user on boarding
+     *
+     * @param onBoardRequestDTO
+     * @return onBoardResponseDTO
+     */
+    public OnBoardResponseDTO insertDetailsForOnBoarding(OnBoardRequestDTO onBoardRequestDTO) throws
+            UserIdNotFoundException, InsertionFailedException {
+        try {
+            logger.info("[insertDetailsForOnBoarding] On boarding a user: {}", onBoardRequestDTO);
+            UserOnBoardModel user = accountServiceHelper.convertDtoToUserOnBoardModel(onBoardRequestDTO);
+            UserOnBoardModel userOnBoardModel = accountServiceHelper.saveOnBoardModel(user);
+            OnBoardResponseDTO onBoardResponseDTO = accountServiceHelper.convertModelToOnBoardResponseDto(userOnBoardModel);
+            return onBoardResponseDTO;
+        } catch (DataIntegrityViolationException | InsertionFailedException e) {
+            logger.info("[saveRegisterModel] account already exists for userId: {}", onBoardRequestDTO.getUserId());
+            throw new InsertionFailedException(ErrorCode.USER_ONBOARD_FAILED,
+                    ErrorCode.USER_ONBOARD_FAILED.getErrorMessage(),
+                    ErrorCode.USER_ONBOARD_FAILED.getDisplayMessage());
         }
     }
+}
