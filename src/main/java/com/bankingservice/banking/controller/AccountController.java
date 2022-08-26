@@ -5,15 +5,18 @@ import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.response.MetaDTO;
 import com.bankingservice.banking.dto.response.BaseResponseDTO;
 import com.bankingservice.banking.exception.InsertionFailedException;
-import com.bankingservice.banking.exception.SuccessCode;
+import com.bankingservice.banking.enums.SuccessCode;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.services.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.bankingservice.banking.constants.Constants.OK;
 
 /**
  * Controller for account api
@@ -34,7 +37,7 @@ public class AccountController {
      * @return baseResponseDTO
      */
     @PostMapping("/register")
-    public ResponseEntity<BaseResponseDTO> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) throws InsertionFailedException {
+    public ResponseEntity<BaseResponseDTO> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) throws InsertionFailedException, DataIntegrityViolationException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         logger.info("[registerUser] user registration started");
         baseResponseDTO.setData(accountService.insertDetailsForRegistration(registerRequestDTO));
@@ -71,7 +74,7 @@ public class AccountController {
     public ResponseEntity<BaseResponseDTO> healthCheck(){
         logger.info("[healthCheck] health check");
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
-        baseResponseDTO.setData("ok");
+        baseResponseDTO.setData(OK);
         baseResponseDTO.setMetaDTO(createSuccessMetaData());
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }

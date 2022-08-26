@@ -1,5 +1,7 @@
 package com.bankingservice.banking.exception;
 
+import com.bankingservice.banking.enums.ErrorCode;
+
 public class UserIdNotFoundException extends Exception {
     private ErrorCode errorCode;
     private String errorMessage;
