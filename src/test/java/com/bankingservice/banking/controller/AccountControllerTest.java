@@ -123,11 +123,4 @@ public class AccountControllerTest {
         }};
     }
 
-    @Test
-    public void healthCheckTest() {
-        BaseResponseDTO baseResponseDTO = accountController.healthCheck().getBody();
-        Assert.assertNotNull(baseResponseDTO);
-        Assert.assertNotNull(baseResponseDTO.getData());
-        Assert.assertNotNull(baseResponseDTO.getMetaDTO());
-    }
 }

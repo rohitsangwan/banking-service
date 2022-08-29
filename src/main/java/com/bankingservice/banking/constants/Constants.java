@@ -20,4 +20,13 @@ public final class Constants {
      * The constant REG used as a prefix
      */
     public static final String REG = "REG";
+
+    /**
+     * The constant REQUEST_ID
+     */
+    public static final String REQUEST_ID = "request-id";
+    /**
+     * The constant RESPONSE_ID
+     */
+    public static final String RESPONSE_ID = "response-id";
 }
