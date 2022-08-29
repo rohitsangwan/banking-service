@@ -1,6 +1,0 @@
-2022-08-29 11:50:44,337 ERROR com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-7] [convertDtoToUserOnBoardModel] user does not exist for userId: REG20519411350
-2022-08-29 11:50:44,351 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-7] UserIdNotFoundException: [Ljava.lang.StackTraceElement;@3a0eafaf
-2022-08-29 11:52:14,235 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-3] InsertionFailedException: [Ljava.lang.StackTraceElement;@675301b9
-2022-08-29 16:38:47,646 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-10] InsertionFailedException: [Ljava.lang.StackTraceElement;@6ac3a21c
-2022-08-29 16:39:05,874 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-5] InsertionFailedException: [Ljava.lang.StackTraceElement;@7d8f69e6
-2022-08-29 16:50:51,696 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-1] [5ccf15cd-64cc-4d4a-a931-81c58c74bc47] [9714993d-1928-4c84-b790-4989d2bafc15] InsertionFailedException: [Ljava.lang.StackTraceElement;@2528bc67

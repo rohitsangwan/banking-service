@@ -2,6 +2,11 @@ package com.bankingservice.banking.constants;
 
 import lombok.Data;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * constants for general purpose
  */
@@ -29,4 +34,9 @@ public final class Constants {
      * The constant RESPONSE_ID
      */
     public static final String RESPONSE_ID = "response-id";
+    /**
+     * The constant URI_TO_IGNORE.
+     */
+    public static final Set<String> URI_TO_IGNORE = Collections.unmodifiableSet(
+            new HashSet<>(Arrays.asList("/account/v1/health")));
 }
