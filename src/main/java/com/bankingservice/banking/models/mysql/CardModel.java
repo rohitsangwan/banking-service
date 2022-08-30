@@ -29,6 +29,9 @@ public class CardModel {
     @Column(name = "cvv")
     private Integer cvv;
 
+    @Column(name = "pin")
+    private Integer pin;
+
     @Column(name = "cardState")
     @Enumerated(EnumType.STRING)
     private CardState cardState;

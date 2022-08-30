@@ -3,11 +3,13 @@ package com.bankingservice.banking.services.servicehelper;
 import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
+import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.CardResponseDTO;
 import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
 import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
 import com.bankingservice.banking.enums.CardState;
 import com.bankingservice.banking.enums.ErrorCode;
+import com.bankingservice.banking.exception.CardNotFoundException;
 import com.bankingservice.banking.exception.InsertionFailedException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.models.mysql.CardModel;
@@ -94,7 +96,7 @@ public class AccountServiceHelper {
             CardModel card = cardRepository.save(cardModel);
             logger.info("[saveCardModel] card details saved for : {}", cardModel);
             return card;
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             logger.info("[saveCardModel] card already exists for user: {}", cardModel);
             throw new InsertionFailedException(ErrorCode.CARD_GENERATION_FAILED,
                     ErrorCode.CARD_GENERATION_FAILED.getErrorMessage(),
@@ -212,5 +214,29 @@ public class AccountServiceHelper {
         CardResponseDTO cardResponseDTO = new CardResponseDTO();
         BeanUtils.copyProperties(card, cardResponseDTO);
         return cardResponseDTO;
+    }
+
+    /**
+     * fetching the card and setting the pin
+     *
+     * @param setPinRequestDTO
+     * @return cardModel
+     * @throws CardNotFoundException
+     */
+    public CardModel setPin(SetPinRequestDTO setPinRequestDTO) throws CardNotFoundException {
+        logger.info("[setPin] fetching card details for card number: {}", setPinRequestDTO.getCardNumber());
+        Optional<CardModel> card = cardRepository.findByCardNumber(setPinRequestDTO.getCardNumber());
+        if (card.isPresent()) {
+            CardModel card1 = card.get();
+            card1.setPin(setPinRequestDTO.getPin());
+            card1.setCardState(CardState.ACTIVE);
+            CardModel cardModel = cardRepository.save(card1);
+            return cardModel;
+        } else {
+            logger.error("[setPin] card does not exist for card number: {}", setPinRequestDTO.getCardNumber());
+            throw new CardNotFoundException(ErrorCode.CARD_NOT_FOUND,
+                    String.format(ErrorCode.CARD_NOT_FOUND.getErrorMessage(), setPinRequestDTO.getCardNumber()),
+                    ErrorCode.CARD_NOT_FOUND.getDisplayMessage());
+        }
     }
 }

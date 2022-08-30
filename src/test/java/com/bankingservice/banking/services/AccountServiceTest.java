@@ -3,12 +3,15 @@ package com.bankingservice.banking.services;
 import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
+import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.CardResponseDTO;
 import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
 import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
+import com.bankingservice.banking.dto.response.SetPinResponseDTO;
 import com.bankingservice.banking.enums.AccountType;
 import com.bankingservice.banking.enums.CardState;
 import com.bankingservice.banking.enums.Gender;
+import com.bankingservice.banking.exception.CardNotFoundException;
 import com.bankingservice.banking.exception.InsertionFailedException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.models.mysql.CardModel;
@@ -54,6 +57,7 @@ public class AccountServiceTest {
     private UserOnBoardModel userOnBoardModel;
     private CardModel cardModel;
     private static final int id = RandomUtils.nextInt();
+    private static final int pin = RandomUtils.nextInt();
     private static final int cvv = RandomUtils.nextInt();
     private static final int id1 = RandomUtils.nextInt();
     private static final String name = RandomStringUtils.randomAlphabetic(10);
@@ -222,6 +226,41 @@ public class AccountServiceTest {
             accountServiceHelper.saveCardModel((CardModel) any);
             times = 1;
         }};
+    }
+
+    @Test
+    public void setPin() throws CardNotFoundException {
+        new Expectations() {{
+            accountServiceHelper.setPin((SetPinRequestDTO) any);
+            result = cardModel;
+        }};
+        SetPinResponseDTO setPinResponseDTO = accountService.setPin(makeSetPinRequestDTO());
+        Assert.assertNotNull(setPinResponseDTO);
+        new Verifications() {{
+            accountServiceHelper.setPin((SetPinRequestDTO) any);
+            times = 1;
+        }};
+    }
+
+    @Test(expectedExceptions = CardNotFoundException.class)
+    public void testSetPinCardNotFoundException() throws CardNotFoundException {
+        new Expectations() {{
+            accountServiceHelper.setPin((SetPinRequestDTO) any);
+            result = new CardNotFoundException();
+        }};
+        SetPinResponseDTO setPinResponseDTO = accountService.setPin(makeSetPinRequestDTO());
+        Assert.assertNotNull(setPinResponseDTO);
+        new Verifications() {{
+            accountServiceHelper.setPin((SetPinRequestDTO) any);
+            times = 1;
+        }};
+    }
+
+    private SetPinRequestDTO makeSetPinRequestDTO() {
+        SetPinRequestDTO setPinRequestDTO = new SetPinRequestDTO();
+        setPinRequestDTO.setCardNumber(cardNumber);
+        setPinRequestDTO.setPin(pin);
+        return setPinRequestDTO;
     }
 
     private CardRequestDTO makeCardRequestDTO() {

@@ -8,7 +8,7 @@ public enum SuccessCode {
     /**
      * Success code
      */
-    SUCCESS_CODE("BS_ACC_202002", "Success", HttpStatus.OK);
+    SUCCESS_CODE("BS_ACC_200002", "Success", HttpStatus.OK);
 
     private final String code;
     private final String message;
