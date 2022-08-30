@@ -56,7 +56,7 @@ public class AccountServiceHelper {
             logger.info("[saveRegisterModel] registration details saved for user: {}", user);
             return registerUserModel;
         } catch (DataIntegrityViolationException e) {
-            logger.info("[saveRegisterModel] username/email already exists for user: {}", user);
+            logger.error("[saveRegisterModel] username/email already exists for user: {}", user);
             throw new InsertionFailedException(ErrorCode.USER_REGISTRATION_FAILED,
                     ErrorCode.USER_REGISTRATION_FAILED.getErrorMessage(),
                     ErrorCode.USER_REGISTRATION_FAILED.getDisplayMessage());
@@ -76,7 +76,7 @@ public class AccountServiceHelper {
             logger.info("[saveOnBoardModel] on boarding info saved for user: {}", user);
             return userOnBoardModel;
         } catch (DataIntegrityViolationException e) {
-            logger.info("[saveRegisterModel] account exists for user: {}", user);
+            logger.error("[saveRegisterModel] account exists for user: {}", user);
             throw new InsertionFailedException(ErrorCode.USER_ONBOARD_FAILED,
                     ErrorCode.USER_ONBOARD_FAILED.getErrorMessage(),
                     ErrorCode.USER_ONBOARD_FAILED.getDisplayMessage());
@@ -97,7 +97,7 @@ public class AccountServiceHelper {
             logger.info("[saveCardModel] card details saved for : {}", cardModel);
             return card;
         } catch (DataIntegrityViolationException e) {
-            logger.info("[saveCardModel] card already exists for user: {}", cardModel);
+            logger.error("[saveCardModel] card already exists for user: {}", cardModel);
             throw new InsertionFailedException(ErrorCode.CARD_GENERATION_FAILED,
                     ErrorCode.CARD_GENERATION_FAILED.getErrorMessage(),
                     ErrorCode.CARD_GENERATION_FAILED.getDisplayMessage());

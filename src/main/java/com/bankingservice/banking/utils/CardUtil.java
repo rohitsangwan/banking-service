@@ -1,5 +1,7 @@
 package com.bankingservice.banking.utils;
 
+import com.bankingservice.banking.constants.Constants;
+
 import java.time.Instant;
 import java.util.Random;
 import java.util.UUID;
@@ -21,7 +23,7 @@ public class CardUtil {
         Random random = new Random();
         UUID uuid = UUID.randomUUID();
         Long epochMilli = Instant.now().toEpochMilli();
-        String hashCode = String.valueOf(("CVV" + uuid + epochMilli).hashCode());
+        String hashCode = String.valueOf((Constants.CVV + uuid + epochMilli).hashCode());
         String refactoredString = hashCode.replace("-", String.valueOf(random.nextInt(10)));
         Integer cvv = Integer.parseInt(refactoredString.substring(0,3));
         return cvv;

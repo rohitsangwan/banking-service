@@ -73,7 +73,7 @@ public class AccountService {
             OnBoardResponseDTO onBoardResponseDTO = accountServiceHelper.convertModelToOnBoardResponseDto(userOnBoardModel);
             return onBoardResponseDTO;
         } catch (DataIntegrityViolationException | InsertionFailedException e) {
-            logger.info("[saveRegisterModel] account already exists for userId: {}", onBoardRequestDTO.getUserId());
+            logger.error("[saveRegisterModel] account already exists for userId: {}", onBoardRequestDTO.getUserId());
             throw new InsertionFailedException(ErrorCode.USER_ONBOARD_FAILED,
                     ErrorCode.USER_ONBOARD_FAILED.getErrorMessage(),
                     ErrorCode.USER_ONBOARD_FAILED.getDisplayMessage());
@@ -96,12 +96,12 @@ public class AccountService {
             CardResponseDTO cardResponseDTO = accountServiceHelper.convertCardModelToDto(card);
             return cardResponseDTO;
         } catch (DataIntegrityViolationException | InsertionFailedException e){
-            logger.info("[generateCardDetails] card already exists for userId: {}", cardRequestDTO.getUserId());
+            logger.error("[generateCardDetails] card already exists for userId: {}", cardRequestDTO.getUserId());
             throw new InsertionFailedException(ErrorCode.CARD_GENERATION_FAILED,
                     ErrorCode.CARD_GENERATION_FAILED.getErrorMessage(),
                     ErrorCode.CARD_GENERATION_FAILED.getDisplayMessage());
         } catch (UserIdNotFoundException e) {
-            logger.info("[generateCardDetails] user does not exist with user ID: {}", cardRequestDTO.getUserId());
+            logger.error("[generateCardDetails] user does not exist with user ID: {}", cardRequestDTO.getUserId());
             throw new UserIdNotFoundException(ErrorCode.USER_ID_NOT_FOUND,
                     String.format(ErrorCode.USER_ID_NOT_FOUND.getErrorMessage(), cardRequestDTO.getUserId()),
                     ErrorCode.USER_ID_NOT_FOUND.getDisplayMessage());
@@ -123,7 +123,7 @@ public class AccountService {
             BeanUtils.copyProperties(cardModel, setPinResponseDTO);
             return setPinResponseDTO;
         } catch (CardNotFoundException | DataIntegrityViolationException e){
-            logger.info("[setPin] card not found for card number: {}", setPinRequestDTO.getCardNumber());
+            logger.error("[setPin] card not found for card number: {}", setPinRequestDTO.getCardNumber());
             throw new CardNotFoundException(ErrorCode.CARD_NOT_FOUND,
                     String.format(ErrorCode.CARD_NOT_FOUND.getErrorMessage(), setPinRequestDTO.getCardNumber()),
                     ErrorCode.CARD_NOT_FOUND.getDisplayMessage());
