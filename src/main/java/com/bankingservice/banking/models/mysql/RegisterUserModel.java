@@ -40,4 +40,8 @@ public class RegisterUserModel {
     @JsonIgnore
     @OneToOne(mappedBy = "registerUserModel")
     private UserOnBoardModel userOnBoardModel;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "registerUser")
+    private CardModel cardModel;
 }

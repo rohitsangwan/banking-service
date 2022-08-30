@@ -45,4 +45,17 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Handles card not found exception
+     *
+     * @param e
+     * @return response entity
+     */
+    @ExceptionHandler(CardNotFoundException.class)
+    public ResponseEntity<BaseResponseDTO> handleCardNotFoundException(CardNotFoundException e){
+        logger.error("CardNotFoundException: " +  e.getStackTrace());
+        BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
+        baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), MDC.get(REQUEST_ID), MDC.get(RESPONSE_ID)));
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
+    }
 }

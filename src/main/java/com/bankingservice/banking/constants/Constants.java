@@ -17,6 +17,11 @@ public final class Constants {
     }
 
     /**
+     * The constant CVV for generating the cvv for card
+     */
+    public static final String CVV = "CVV";
+
+    /**
      * The constant OK for health check
      */
     public static final String OK = "ok";
