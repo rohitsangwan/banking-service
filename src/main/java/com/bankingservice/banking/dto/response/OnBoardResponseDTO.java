@@ -10,6 +10,9 @@ import java.io.Serializable;
 @Data
 public class OnBoardResponseDTO implements Serializable {
 
+    /**
+     * name is user's name
+     */
     private String name;
     /**
      * email is user's email ID which should be unique

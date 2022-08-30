@@ -1,5 +1,6 @@
 package com.bankingservice.banking.controller;
 
+import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.response.BaseResponseDTO;
@@ -52,6 +53,14 @@ public class AccountController {
     public ResponseEntity<BaseResponseDTO> onBoardUser(@RequestBody OnBoardRequestDTO onBoardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         baseResponseDTO.setData(accountService.insertDetailsForOnBoarding(onBoardRequestDTO));
+        baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("/card")
+    public ResponseEntity<BaseResponseDTO> generateCard(@RequestBody CardRequestDTO cardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
+        BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
+        baseResponseDTO.setData(accountService.generateCardDetails(cardRequestDTO));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
