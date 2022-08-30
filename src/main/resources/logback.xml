@@ -9,7 +9,7 @@
               class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
-                %d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %boldCyan(%logger{36}) - %msg%n
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %boldCyan(%logger{36}.%M) [%X{request-id}] [%X{response-id}] - %msg%n
             </Pattern>
         </layout>
     </appender>
@@ -19,7 +19,7 @@
         <file>${LOGS}/spring-boot-logger.log</file>
         <encoder
                 class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            <Pattern>%d %p %C{1.} [%t] [%X{request-id}] [%X{response-id}] %m%n</Pattern>
         </encoder>
 
         <rollingPolicy
@@ -43,7 +43,7 @@
         </filter>
         <encoder
                 class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            <Pattern>%d %p %C{1.} [%t] [%X{request-id}] [%X{response-id}] %m%n</Pattern>
         </encoder>
 
         <rollingPolicy

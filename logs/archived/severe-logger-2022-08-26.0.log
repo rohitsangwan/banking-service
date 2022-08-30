@@ -1,0 +1,2 @@
+2022-08-26 12:07:12,853 ERROR com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [makeOnBoardingEntity] user does not exist for userId: REG20519411350
+2022-08-26 12:07:12,862 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-3] UserIdNotFoundException: [Ljava.lang.StackTraceElement;@e707e2e
