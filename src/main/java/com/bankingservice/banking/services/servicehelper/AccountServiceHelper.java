@@ -12,12 +12,14 @@ import com.bankingservice.banking.enums.ErrorCode;
 import com.bankingservice.banking.exception.CardNotFoundException;
 import com.bankingservice.banking.exception.InsertionFailedException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
+import com.bankingservice.banking.exception.UserNotFoundException;
 import com.bankingservice.banking.models.mysql.CardModel;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
 import com.bankingservice.banking.repository.CardRepository;
 import com.bankingservice.banking.repository.RegisterUserRepository;
 import com.bankingservice.banking.repository.UserOnBoardRepository;
+import com.bankingservice.banking.utils.AccountNumberUtil;
 import com.bankingservice.banking.utils.CardUtil;
 import com.bankingservice.banking.utils.UniqueValueUtil;
 import org.slf4j.Logger;
@@ -145,6 +147,7 @@ public class AccountServiceHelper {
         Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(onBoardRequestDTO.getUserId());
         if (registerUserModel.isPresent()) {
             userOnBoardModel.setRegisterUserId(registerUserModel.get().getId());
+            userOnBoardModel.setAccountNumber(AccountNumberUtil.generateAccountNumber());
             return userOnBoardModel;
         } else {
             logger.error("[convertDtoToUserOnBoardModel] user does not exist for userId: {}", onBoardRequestDTO.getUserId());
@@ -237,6 +240,35 @@ public class AccountServiceHelper {
             throw new CardNotFoundException(ErrorCode.CARD_NOT_FOUND,
                     String.format(ErrorCode.CARD_NOT_FOUND.getErrorMessage(), setPinRequestDTO.getCardNumber()),
                     ErrorCode.CARD_NOT_FOUND.getDisplayMessage());
+        }
+    }
+
+    /**
+     * fetch the card details
+     *
+     * @param userId
+     * @return cardModel
+     * @throws CardNotFoundException
+     * @throws UserNotFoundException
+     */
+    public CardModel findCardDetails(String userId) throws CardNotFoundException, UserNotFoundException {
+        logger.info("[findCardDetails] fetching card details for user Id: {}", userId);
+        Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(userId);
+        if (registerUserModel.isPresent()) {
+            Optional<CardModel> cardModel = cardRepository.findByCardId(registerUserModel.get().getId());
+            if (cardModel.isPresent()) {
+                return cardModel.get();
+            } else {
+                logger.error("[findCardDetails] card does not exist for user ID : {}", userId);
+                throw new CardNotFoundException(ErrorCode.CARD_NOT_FOUND,
+                        String.format(ErrorCode.CARD_NOT_FOUND.getErrorMessage(), userId),
+                        ErrorCode.CARD_NOT_FOUND.getDisplayMessage());
+            }
+        } else {
+            logger.error("[findCardDetails] user does not exist for user ID : {}", userId);
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
+                    String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
+                    ErrorCode.USER_NOT_FOUND.getDisplayMessage());
         }
     }
 }

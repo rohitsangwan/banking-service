@@ -58,4 +58,12 @@ public class ApplicationExceptionHandler {
         baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), MDC.get(REQUEST_ID), MDC.get(RESPONSE_ID)));
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<BaseResponseDTO> handleUserNotFoundException(UserNotFoundException e){
+        logger.error("UserNotFoundException: " +  e.getStackTrace());
+        BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
+        baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), MDC.get(REQUEST_ID), MDC.get(RESPONSE_ID)));
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
+    }
 }

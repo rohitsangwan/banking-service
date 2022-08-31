@@ -59,35 +59,4 @@ public class AccountController {
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
 
-    /**
-     * entry point controller to generate the card
-     *
-     * @param cardRequestDTO
-     * @return ResponseEntity
-     * @throws InsertionFailedException
-     * @throws UserIdNotFoundException
-     */
-    @PostMapping("/card")
-    public ResponseEntity<BaseResponseDTO> generateCard(@RequestBody CardRequestDTO cardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
-        BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
-        baseResponseDTO.setData(accountService.generateCardDetails(cardRequestDTO));
-        baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
-        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
-    }
-
-    /**
-     * entry point controller to set the pin
-     *
-     * @param setPinRequestDTO
-     * @return ResponseEntity
-     * @throws UserIdNotFoundException
-     */
-    @PostMapping("/pin")
-    public ResponseEntity<BaseResponseDTO> setPin(@RequestBody SetPinRequestDTO setPinRequestDTO) throws CardNotFoundException {
-        BaseResponseDTO baseResponseDTO=new BaseResponseDTO();
-        baseResponseDTO.setData(accountService.setPin(setPinRequestDTO));
-        baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
-        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
-    }
-
 }

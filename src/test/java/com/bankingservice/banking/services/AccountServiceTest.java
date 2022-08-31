@@ -14,6 +14,7 @@ import com.bankingservice.banking.enums.Gender;
 import com.bankingservice.banking.exception.CardNotFoundException;
 import com.bankingservice.banking.exception.InsertionFailedException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
+import com.bankingservice.banking.exception.UserNotFoundException;
 import com.bankingservice.banking.models.mysql.CardModel;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
@@ -252,6 +253,48 @@ public class AccountServiceTest {
         Assert.assertNotNull(setPinResponseDTO);
         new Verifications() {{
             accountServiceHelper.setPin((SetPinRequestDTO) any);
+            times = 1;
+        }};
+    }
+
+    @Test
+    public void getCardDetails() throws UserNotFoundException, CardNotFoundException {
+        new Expectations() {{
+            accountServiceHelper.findCardDetails(userId);
+            result = cardModel;
+        }};
+        CardResponseDTO cardResponseDTO = accountService.getCardDetails(userId);
+        Assert.assertNotNull(cardResponseDTO);
+        new Verifications() {{
+            accountServiceHelper.findCardDetails(userId);
+            times = 1;
+        }};
+    }
+
+    @Test(expectedExceptions = UserNotFoundException.class)
+    public void getCardDetailsUserNotFoundException() throws UserNotFoundException, CardNotFoundException {
+        new Expectations() {{
+            accountServiceHelper.findCardDetails(userId);
+            result = new UserNotFoundException();
+        }};
+        CardResponseDTO cardResponseDTO = accountService.getCardDetails(userId);
+        Assert.assertNotNull(cardResponseDTO);
+        new Verifications() {{
+            accountServiceHelper.findCardDetails(userId);
+            times = 1;
+        }};
+    }
+
+    @Test(expectedExceptions = CardNotFoundException.class)
+    public void getCardDetailsCardNotFoundException() throws UserNotFoundException, CardNotFoundException {
+        new Expectations() {{
+            accountServiceHelper.findCardDetails(userId);
+            result = new CardNotFoundException();
+        }};
+        CardResponseDTO cardResponseDTO = accountService.getCardDetails(userId);
+        Assert.assertNotNull(cardResponseDTO);
+        new Verifications() {{
+            accountServiceHelper.findCardDetails(userId);
             times = 1;
         }};
     }
