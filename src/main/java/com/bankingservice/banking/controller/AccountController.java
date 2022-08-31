@@ -8,6 +8,7 @@ import com.bankingservice.banking.dto.response.BaseResponseDTO;
 import com.bankingservice.banking.exception.CardNotFoundException;
 import com.bankingservice.banking.exception.InsertionFailedException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
+import com.bankingservice.banking.exception.UserNotFoundException;
 import com.bankingservice.banking.services.AccountService;
 import com.bankingservice.banking.utils.CreateMetaData;
 import org.slf4j.Logger;
@@ -55,6 +56,21 @@ public class AccountController {
     public ResponseEntity<BaseResponseDTO> onBoardUser(@RequestBody OnBoardRequestDTO onBoardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         baseResponseDTO.setData(accountService.insertDetailsForOnBoarding(onBoardRequestDTO));
+        baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
+    }
+
+    /**
+     * entry point controller to fetch the user's details
+     *
+     * @param userId
+     * @return ResponseEntity
+     * @throws UserNotFoundException
+     */
+    @GetMapping("/user-details/{userId}")
+    public ResponseEntity<BaseResponseDTO> findUserDetails(@PathVariable("userId") String userId) throws UserNotFoundException {
+        BaseResponseDTO baseResponseDTO = new BaseResponseDTO<>();
+        baseResponseDTO.setData(accountService.getUserDetails(userId));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }

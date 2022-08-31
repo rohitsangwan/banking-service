@@ -7,6 +7,7 @@ import com.bankingservice.banking.enums.AccountType;
 import com.bankingservice.banking.enums.Gender;
 import com.bankingservice.banking.exception.InsertionFailedException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
+import com.bankingservice.banking.exception.UserNotFoundException;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.services.AccountService;
 import mockit.Expectations;
@@ -42,6 +43,7 @@ public class AccountControllerTest {
     RegisterRequestDTO registerRequestDTO;
     OnBoardRequestDTO onBoardRequestDTO;
     OnBoardResponseDTO onBoardResponseDTO;
+    UserDetailsResponseDTO userDetailsResponseDTO;
 
     @BeforeMethod
     public void setUp() {
@@ -87,6 +89,18 @@ public class AccountControllerTest {
         onBoardResponseDTO.setUserName(userName);
         onBoardResponseDTO.setPassword(password);
         onBoardResponseDTO.setUserId(userId);
+
+        userDetailsResponseDTO = new UserDetailsResponseDTO();
+        userDetailsResponseDTO.setAge(age);
+        userDetailsResponseDTO.setGender(Gender.MALE);
+        userDetailsResponseDTO.setAccountType(AccountType.CURRENT);
+        userDetailsResponseDTO.setAadhaarNumber(aadhaarNumber);
+        userDetailsResponseDTO.setAddress(address);
+        userDetailsResponseDTO.setName(name);
+        userDetailsResponseDTO.setEmail(email);
+        userDetailsResponseDTO.setUserName(userName);
+        userDetailsResponseDTO.setPassword(password);
+        userDetailsResponseDTO.setUserId(userId);
     }
 
     @Test
@@ -117,6 +131,22 @@ public class AccountControllerTest {
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
         new Verifications() {{
             accountService.insertDetailsForOnBoarding((OnBoardRequestDTO) any);
+            times = 1;
+        }};
+    }
+
+    @Test
+    public void testFindUserDetails() throws UserNotFoundException {
+        new Expectations() {{
+            accountService.getUserDetails(userId);
+            result = userDetailsResponseDTO;
+        }};
+        BaseResponseDTO baseResponseDTO = accountController.findUserDetails(userId).getBody();
+        Assert.assertNotNull(baseResponseDTO);
+        Assert.assertNotNull(baseResponseDTO.getData());
+        Assert.assertNotNull(baseResponseDTO.getMetaDTO());
+        new Verifications() {{
+            accountService.getUserDetails(userId);
             times = 1;
         }};
     }

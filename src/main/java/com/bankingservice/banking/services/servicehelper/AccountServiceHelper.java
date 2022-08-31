@@ -7,6 +7,7 @@ import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.CardResponseDTO;
 import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
 import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
+import com.bankingservice.banking.dto.response.UserDetailsResponseDTO;
 import com.bankingservice.banking.enums.CardState;
 import com.bankingservice.banking.enums.ErrorCode;
 import com.bankingservice.banking.exception.CardNotFoundException;
@@ -266,6 +267,35 @@ public class AccountServiceHelper {
             }
         } else {
             logger.error("[findCardDetails] user does not exist for user ID : {}", userId);
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
+                    String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
+                    ErrorCode.USER_NOT_FOUND.getDisplayMessage());
+        }
+    }
+
+    /**
+     * fetch the details of the user
+     *
+     * @param userId
+     * @return userDetailsResponseDTO
+     * @throws UserNotFoundException
+     */
+    public UserDetailsResponseDTO getDetails(String userId) throws UserNotFoundException {
+        UserDetailsResponseDTO userDetailsResponseDTO = new UserDetailsResponseDTO();
+        logger.info("[getDetails] checking if the user exists for user Id: {}", userId);
+        Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(userId);
+        if (registerUserModel.isPresent()) {
+            logger.info("[getDetails] user exists for user Id: {}", userId);
+            BeanUtils.copyProperties(registerUserModel.get(), userDetailsResponseDTO);
+            Optional<UserOnBoardModel> onBoardModel = userOnBoardRepository.findByRegisterUserId(registerUserModel.get().getId());
+            if (onBoardModel.isPresent()) {
+                BeanUtils.copyProperties(onBoardModel.get(), userDetailsResponseDTO);
+            } else {
+                logger.info("[getDetails] user has not onboarded for user Id: {}", userId);
+            }
+            return userDetailsResponseDTO;
+        } else {
+            logger.error("[getDetails] user does not exist for user ID : {}", userId);
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
                     String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
                     ErrorCode.USER_NOT_FOUND.getDisplayMessage());

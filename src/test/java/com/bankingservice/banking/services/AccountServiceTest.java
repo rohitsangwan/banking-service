@@ -4,10 +4,7 @@ import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.request.SetPinRequestDTO;
-import com.bankingservice.banking.dto.response.CardResponseDTO;
-import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
-import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
-import com.bankingservice.banking.dto.response.SetPinResponseDTO;
+import com.bankingservice.banking.dto.response.*;
 import com.bankingservice.banking.enums.AccountType;
 import com.bankingservice.banking.enums.CardState;
 import com.bankingservice.banking.enums.Gender;
@@ -57,6 +54,7 @@ public class AccountServiceTest {
     private RegisterUserModel registerUserModel;
     private UserOnBoardModel userOnBoardModel;
     private CardModel cardModel;
+    private UserDetailsResponseDTO userDetailsResponseDTO;
     private static final int id = RandomUtils.nextInt();
     private static final int pin = RandomUtils.nextInt();
     private static final int cvv = RandomUtils.nextInt();
@@ -73,7 +71,6 @@ public class AccountServiceTest {
     private static final long cardNumber = RandomUtils.nextLong();
     private static final String address = RandomStringUtils.randomAlphanumeric(10);
     private static final String userId = RandomStringUtils.randomAlphanumeric(10);
-    private static final String userId1 = RandomStringUtils.randomAlphanumeric(10);
 
 
     @BeforeMethod
@@ -115,6 +112,18 @@ public class AccountServiceTest {
         cardModel.setCardNumber(cardNumber);
         cardModel.setName(name);
         cardModel.setCardId(cardId);
+
+        userDetailsResponseDTO = new UserDetailsResponseDTO();
+        userDetailsResponseDTO.setAge(age);
+        userDetailsResponseDTO.setGender(Gender.MALE);
+        userDetailsResponseDTO.setAccountType(AccountType.CURRENT);
+        userDetailsResponseDTO.setAadhaarNumber(aadhaarNumber);
+        userDetailsResponseDTO.setAddress(address);
+        userDetailsResponseDTO.setName(name);
+        userDetailsResponseDTO.setEmail(email);
+        userDetailsResponseDTO.setUserName(userName);
+        userDetailsResponseDTO.setPassword(password);
+        userDetailsResponseDTO.setUserId(userId);
     }
 
     @Test
@@ -230,7 +239,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void setPin() throws CardNotFoundException {
+    public void testSetPin() throws CardNotFoundException {
         new Expectations() {{
             accountServiceHelper.setPin((SetPinRequestDTO) any);
             result = cardModel;
@@ -258,7 +267,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void getCardDetails() throws UserNotFoundException, CardNotFoundException {
+    public void testGetCardDetails() throws UserNotFoundException, CardNotFoundException {
         new Expectations() {{
             accountServiceHelper.findCardDetails(userId);
             result = cardModel;
@@ -272,7 +281,7 @@ public class AccountServiceTest {
     }
 
     @Test(expectedExceptions = UserNotFoundException.class)
-    public void getCardDetailsUserNotFoundException() throws UserNotFoundException, CardNotFoundException {
+    public void testGetCardDetailsUserNotFoundException() throws UserNotFoundException, CardNotFoundException {
         new Expectations() {{
             accountServiceHelper.findCardDetails(userId);
             result = new UserNotFoundException();
@@ -286,7 +295,7 @@ public class AccountServiceTest {
     }
 
     @Test(expectedExceptions = CardNotFoundException.class)
-    public void getCardDetailsCardNotFoundException() throws UserNotFoundException, CardNotFoundException {
+    public void testGetCardDetailsCardNotFoundException() throws UserNotFoundException, CardNotFoundException {
         new Expectations() {{
             accountServiceHelper.findCardDetails(userId);
             result = new CardNotFoundException();
@@ -295,6 +304,34 @@ public class AccountServiceTest {
         Assert.assertNotNull(cardResponseDTO);
         new Verifications() {{
             accountServiceHelper.findCardDetails(userId);
+            times = 1;
+        }};
+    }
+
+    @Test
+    public void testGetUserDetails() throws UserNotFoundException {
+        new Expectations() {{
+            accountServiceHelper.getDetails(userId);
+            result = userDetailsResponseDTO;
+        }};
+        UserDetailsResponseDTO detailsResponseDTO = accountService.getUserDetails(userId);
+        Assert.assertNotNull(detailsResponseDTO);
+        new Verifications() {{
+            accountServiceHelper.getDetails(userId);
+            times = 1;
+        }};
+    }
+
+    @Test(expectedExceptions = UserNotFoundException.class)
+    public void testGetUserDetailsUserNotFoundException() throws UserNotFoundException {
+        new Expectations() {{
+            accountServiceHelper.getDetails(userId);
+            result = new UserNotFoundException();
+        }};
+        UserDetailsResponseDTO detailsResponseDTO = accountService.getUserDetails(userId);
+        Assert.assertNotNull(detailsResponseDTO);
+        new Verifications() {{
+            accountServiceHelper.getDetails(userId);
             times = 1;
         }};
     }

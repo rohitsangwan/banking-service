@@ -4,10 +4,7 @@ import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.request.SetPinRequestDTO;
-import com.bankingservice.banking.dto.response.CardResponseDTO;
-import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
-import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
-import com.bankingservice.banking.dto.response.SetPinResponseDTO;
+import com.bankingservice.banking.dto.response.*;
 import com.bankingservice.banking.enums.ErrorCode;
 import com.bankingservice.banking.exception.CardNotFoundException;
 import com.bankingservice.banking.exception.InsertionFailedException;
@@ -135,7 +132,6 @@ public class AccountService {
     }
 
     /**
-     *
      * fetch the card details
      *
      * @param userId
@@ -159,6 +155,26 @@ public class AccountService {
                     ErrorCode.CARD_NOT_FOUND.getDisplayMessage());
         } catch (UserNotFoundException e) {
             logger.error("[getCardDetails] user does not exist for user ID : {}", userId);
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
+                    String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
+                    ErrorCode.USER_NOT_FOUND.getDisplayMessage());
+        }
+    }
+
+    /**
+     * fetch the user's details
+     *
+     * @param userId
+     * @return userDetailsResponseDTO
+     * @throws UserNotFoundException
+     */
+    public UserDetailsResponseDTO getUserDetails(String userId) throws UserNotFoundException {
+        try {
+            logger.info("[getUserDetails] fetching the user details with user Id : {}", userId);
+            UserDetailsResponseDTO userDetailsResponseDTO = accountServiceHelper.getDetails(userId);
+            return userDetailsResponseDTO;
+        } catch (UserNotFoundException e) {
+            logger.error("[getUserDetails] user does not exist for user ID : {}", userId);
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
                     String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
                     ErrorCode.USER_NOT_FOUND.getDisplayMessage());
