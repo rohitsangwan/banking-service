@@ -8,6 +8,7 @@ import com.bankingservice.banking.exception.InsertionFailedException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.exception.UserNotFoundException;
 import com.bankingservice.banking.services.AccountService;
+import com.bankingservice.banking.services.CardService;
 import com.bankingservice.banking.utils.CreateMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class CardController {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
     @Autowired
-    private AccountService accountService;
+    private CardService cardService;
 
     /**
      * entry point controller to generate the card
@@ -40,7 +41,7 @@ public class CardController {
     @PostMapping("/new-card")
     public ResponseEntity<BaseResponseDTO> generateCard(@RequestBody CardRequestDTO cardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
-        baseResponseDTO.setData(accountService.generateCardDetails(cardRequestDTO));
+        baseResponseDTO.setData(cardService.generateCardDetails(cardRequestDTO));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
@@ -55,7 +56,7 @@ public class CardController {
     @PostMapping("/pin")
     public ResponseEntity<BaseResponseDTO> setPin(@RequestBody SetPinRequestDTO setPinRequestDTO) throws CardNotFoundException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
-        baseResponseDTO.setData(accountService.setPin(setPinRequestDTO));
+        baseResponseDTO.setData(cardService.setPin(setPinRequestDTO));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
@@ -70,7 +71,7 @@ public class CardController {
     public ResponseEntity<BaseResponseDTO> getCardInfo(@PathVariable("userId") String userId) throws UserNotFoundException, CardNotFoundException {
         logger.info("Controller UserID: {}", userId);
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO<>();
-        baseResponseDTO.setData(accountService.getCardDetails(userId));
+        baseResponseDTO.setData(cardService.getCardDetails(userId));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }

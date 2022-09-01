@@ -10,7 +10,7 @@ import com.bankingservice.banking.exception.CardNotFoundException;
 import com.bankingservice.banking.exception.InsertionFailedException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.exception.UserNotFoundException;
-import com.bankingservice.banking.services.AccountService;
+import com.bankingservice.banking.services.CardService;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Tested;
@@ -24,9 +24,8 @@ import org.testng.annotations.Test;
 public class CardControllerTest {
     @Tested
     private CardController cardController;
-
     @Injectable
-    private AccountService accountService;
+    private CardService cardService;
     private static final int cvv = RandomUtils.nextInt();
     private static final int pin = RandomUtils.nextInt();
     private static final String name = RandomStringUtils.randomAlphabetic(10);
@@ -65,7 +64,7 @@ public class CardControllerTest {
     @Test
     public void generateCard() throws InsertionFailedException, UserIdNotFoundException {
         new Expectations() {{
-            accountService.generateCardDetails((CardRequestDTO) any);
+            cardService.generateCardDetails((CardRequestDTO) any);
             result = cardResponseDTO;
         }};
         BaseResponseDTO baseResponseDTO = cardController.generateCard(cardRequestDTO).getBody();
@@ -73,7 +72,7 @@ public class CardControllerTest {
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
         new Verifications() {{
-            accountService.generateCardDetails((CardRequestDTO) any);
+            cardService.generateCardDetails((CardRequestDTO) any);
             times = 1;
         }};
     }
@@ -81,7 +80,7 @@ public class CardControllerTest {
     @Test
     public void setPin() throws CardNotFoundException {
         new Expectations() {{
-            accountService.setPin((SetPinRequestDTO) any);
+            cardService.setPin((SetPinRequestDTO) any);
             result = setPinResponseDTO;
         }};
         BaseResponseDTO baseResponseDTO = cardController.setPin(setPinRequestDTO).getBody();
@@ -89,7 +88,7 @@ public class CardControllerTest {
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
         new Verifications() {{
-            accountService.setPin((SetPinRequestDTO) any);
+            cardService.setPin((SetPinRequestDTO) any);
             times = 1;
         }};
     }
@@ -97,7 +96,7 @@ public class CardControllerTest {
     @Test
     public void getCardInfo() throws UserNotFoundException, CardNotFoundException {
         new Expectations() {{
-            accountService.getCardDetails(userId);
+            cardService.getCardDetails(userId);
             result = cardResponseDTO;
         }};
         BaseResponseDTO baseResponseDTO = cardController.getCardInfo(userId).getBody();
@@ -105,7 +104,7 @@ public class CardControllerTest {
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
         new Verifications() {{
-            accountService.getCardDetails(userId);
+            cardService.getCardDetails(userId);
             times = 1;
         }};
     }

@@ -1,21 +1,15 @@
 package com.bankingservice.banking.services;
 
-import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
-import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.*;
 import com.bankingservice.banking.enums.AccountType;
-import com.bankingservice.banking.enums.CardState;
 import com.bankingservice.banking.enums.Gender;
-import com.bankingservice.banking.exception.CardNotFoundException;
 import com.bankingservice.banking.exception.InsertionFailedException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.exception.UserNotFoundException;
-import com.bankingservice.banking.models.mysql.CardModel;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
-import com.bankingservice.banking.repository.CardRepository;
 import com.bankingservice.banking.repository.RegisterUserRepository;
 import com.bankingservice.banking.repository.UserOnBoardRepository;
 import com.bankingservice.banking.services.servicehelper.AccountServiceHelper;
@@ -32,7 +26,6 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class AccountServiceTest {
     @Tested
@@ -43,21 +36,14 @@ public class AccountServiceTest {
 
     @Injectable
     private UserOnBoardRepository userOnBoardRepository;
-
-    @Injectable
-    private CardRepository cardRepository;
-
     @Injectable
     private AccountServiceHelper accountServiceHelper;
 
     private List<RegisterUserModel> registerEntities;
     private RegisterUserModel registerUserModel;
     private UserOnBoardModel userOnBoardModel;
-    private CardModel cardModel;
     private UserDetailsResponseDTO userDetailsResponseDTO;
     private static final int id = RandomUtils.nextInt();
-    private static final int pin = RandomUtils.nextInt();
-    private static final int cvv = RandomUtils.nextInt();
     private static final int id1 = RandomUtils.nextInt();
     private static final String name = RandomStringUtils.randomAlphabetic(10);
     private static final String email = RandomStringUtils.randomAlphanumeric(10);
@@ -65,10 +51,8 @@ public class AccountServiceTest {
     private static final String userName = RandomStringUtils.randomAlphanumeric(10);
     private static final String password = RandomStringUtils.randomAlphanumeric(10);
     private static final int age = RandomUtils.nextInt();
-    private static final int cardId = RandomUtils.nextInt();
     private static final int registerUserId = RandomUtils.nextInt();
     private static final long aadhaarNumber = RandomUtils.nextLong();
-    private static final long cardNumber = RandomUtils.nextLong();
     private static final String address = RandomStringUtils.randomAlphanumeric(10);
     private static final String userId = RandomStringUtils.randomAlphanumeric(10);
 
@@ -105,13 +89,6 @@ public class AccountServiceTest {
         userOnBoardModel.setGender(Gender.MALE);
         userOnBoardModel.setAccountType(AccountType.CURRENT);
         userOnBoardModel.setRegisterUserId(registerUserId);
-
-        cardModel = new CardModel();
-        cardModel.setCardState(CardState.DISABLED);
-        cardModel.setCvv(cvv);
-        cardModel.setCardNumber(cardNumber);
-        cardModel.setName(name);
-        cardModel.setCardId(cardId);
 
         userDetailsResponseDTO = new UserDetailsResponseDTO();
         userDetailsResponseDTO.setAge(age);
@@ -197,118 +174,6 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testGenerateCardDetails() throws InsertionFailedException, UserIdNotFoundException {
-        new Expectations() {{
-            accountServiceHelper.saveCardModel((CardModel) any);
-            result = cardModel;
-        }};
-        CardResponseDTO cardResponseDTO = accountService.generateCardDetails(makeCardRequestDTO());
-        Assert.assertNotNull(cardResponseDTO);
-        new Verifications() {{
-            accountServiceHelper.saveCardModel((CardModel) any);
-            times = 1;
-        }};
-    }
-
-    @Test(expectedExceptions = InsertionFailedException.class)
-    public void testGenerateCardDetailsInsertionFailedException() throws InsertionFailedException, UserIdNotFoundException {
-        new Expectations() {{
-            accountServiceHelper.saveCardModel((CardModel) any);
-            result = new InsertionFailedException();
-        }};
-        CardResponseDTO cardResponseDTO = accountService.generateCardDetails(makeCardRequestDTO());
-        Assert.assertNotNull(cardResponseDTO);
-        new Verifications() {{
-            accountServiceHelper.saveCardModel((CardModel) any);
-            times = 1;
-        }};
-    }
-
-    @Test(expectedExceptions = UserIdNotFoundException.class)
-    public void testGenerateCardDetailsUserIdNotFoundException() throws InsertionFailedException, UserIdNotFoundException {
-        new Expectations() {{
-            accountServiceHelper.saveCardModel((CardModel) any);
-            result = new UserIdNotFoundException();
-        }};
-        CardResponseDTO cardResponseDTO = accountService.generateCardDetails(makeCardRequestDTO());
-        Assert.assertNotNull(cardResponseDTO);
-        new Verifications() {{
-            accountServiceHelper.saveCardModel((CardModel) any);
-            times = 1;
-        }};
-    }
-
-    @Test
-    public void testSetPin() throws CardNotFoundException {
-        new Expectations() {{
-            accountServiceHelper.setPin((SetPinRequestDTO) any);
-            result = cardModel;
-        }};
-        SetPinResponseDTO setPinResponseDTO = accountService.setPin(makeSetPinRequestDTO());
-        Assert.assertNotNull(setPinResponseDTO);
-        new Verifications() {{
-            accountServiceHelper.setPin((SetPinRequestDTO) any);
-            times = 1;
-        }};
-    }
-
-    @Test(expectedExceptions = CardNotFoundException.class)
-    public void testSetPinCardNotFoundException() throws CardNotFoundException {
-        new Expectations() {{
-            accountServiceHelper.setPin((SetPinRequestDTO) any);
-            result = new CardNotFoundException();
-        }};
-        SetPinResponseDTO setPinResponseDTO = accountService.setPin(makeSetPinRequestDTO());
-        Assert.assertNotNull(setPinResponseDTO);
-        new Verifications() {{
-            accountServiceHelper.setPin((SetPinRequestDTO) any);
-            times = 1;
-        }};
-    }
-
-    @Test
-    public void testGetCardDetails() throws UserNotFoundException, CardNotFoundException {
-        new Expectations() {{
-            accountServiceHelper.findCardDetails(userId);
-            result = cardModel;
-        }};
-        CardResponseDTO cardResponseDTO = accountService.getCardDetails(userId);
-        Assert.assertNotNull(cardResponseDTO);
-        new Verifications() {{
-            accountServiceHelper.findCardDetails(userId);
-            times = 1;
-        }};
-    }
-
-    @Test(expectedExceptions = UserNotFoundException.class)
-    public void testGetCardDetailsUserNotFoundException() throws UserNotFoundException, CardNotFoundException {
-        new Expectations() {{
-            accountServiceHelper.findCardDetails(userId);
-            result = new UserNotFoundException();
-        }};
-        CardResponseDTO cardResponseDTO = accountService.getCardDetails(userId);
-        Assert.assertNotNull(cardResponseDTO);
-        new Verifications() {{
-            accountServiceHelper.findCardDetails(userId);
-            times = 1;
-        }};
-    }
-
-    @Test(expectedExceptions = CardNotFoundException.class)
-    public void testGetCardDetailsCardNotFoundException() throws UserNotFoundException, CardNotFoundException {
-        new Expectations() {{
-            accountServiceHelper.findCardDetails(userId);
-            result = new CardNotFoundException();
-        }};
-        CardResponseDTO cardResponseDTO = accountService.getCardDetails(userId);
-        Assert.assertNotNull(cardResponseDTO);
-        new Verifications() {{
-            accountServiceHelper.findCardDetails(userId);
-            times = 1;
-        }};
-    }
-
-    @Test
     public void testGetUserDetails() throws UserNotFoundException {
         new Expectations() {{
             accountServiceHelper.getDetails(userId);
@@ -336,19 +201,6 @@ public class AccountServiceTest {
         }};
     }
 
-    private SetPinRequestDTO makeSetPinRequestDTO() {
-        SetPinRequestDTO setPinRequestDTO = new SetPinRequestDTO();
-        setPinRequestDTO.setCardNumber(cardNumber);
-        setPinRequestDTO.setPin(pin);
-        return setPinRequestDTO;
-    }
-
-    private CardRequestDTO makeCardRequestDTO() {
-        CardRequestDTO cardRequestDTO = new CardRequestDTO();
-        cardRequestDTO.setUserId(userId);
-        return cardRequestDTO;
-    }
-
     private OnBoardRequestDTO makeOnBoardRequestDTO() {
         OnBoardRequestDTO onBoardRequestDTO = new OnBoardRequestDTO();
         onBoardRequestDTO.setAge(age);
@@ -370,8 +222,4 @@ public class AccountServiceTest {
         return registerRequestDTO;
     }
 
-    private Optional getOptionalEntity() {
-        Optional<UserOnBoardModel> opt = Optional.of(userOnBoardModel);
-        return opt;
-    }
 }

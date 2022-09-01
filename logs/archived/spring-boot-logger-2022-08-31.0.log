@@ -1,0 +1,94 @@
+2022-08-31 20:01:59,018 INFO org.springframework.boot.StartupInfoLogger [restartedMain] [] [] Starting BankingApplication using Java 1.8.0_341 on 197NODMB41169.local with PID 4187 (/Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking/build/classes/java/main started by rohitsangwan in /Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking)
+2022-08-31 20:01:59,024 DEBUG org.springframework.boot.StartupInfoLogger [restartedMain] [] [] Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-08-31 20:01:59,025 INFO org.springframework.boot.SpringApplication [restartedMain] [] [] No active profile set, falling back to 1 default profile: "default"
+2022-08-31 20:02:09,190 INFO org.springframework.boot.StartupInfoLogger [restartedMain] [] [] Started BankingApplication in 10.763 seconds (JVM running for 11.614)
+2022-08-31 20:02:53,985 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-3] [d766ab0b-64e6-472c-95bd-746590dde2f9] [067f2beb-d0b3-4b87-a708-955eb1f482c5] [insertDetailsForRegistration] Registering a new user: RegisterRequestDTO(name=leo, email=leo1@gmail.com03, mobileNumber=123456, userName=leoemes03, password=leo@098)
+2022-08-31 20:02:53,989 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [d766ab0b-64e6-472c-95bd-746590dde2f9] [067f2beb-d0b3-4b87-a708-955eb1f482c5] [convertDtoToRegisterUserModel] converting registerRequestDTO RegisterRequestDTO(name=leo, email=leo1@gmail.com03, mobileNumber=123456, userName=leoemes03, password=leo@098) to registerUserModel
+2022-08-31 20:02:54,013 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [d766ab0b-64e6-472c-95bd-746590dde2f9] [067f2beb-d0b3-4b87-a708-955eb1f482c5] [saveRegisterModel] saving the registration details for user: RegisterUserModel(id=null, name=leo, email=leo1@gmail.com03, mobileNumber=123456, userName=leoemes03, password=leo@098, userId=REG1875474330, userOnBoardModel=null, cardModel=null)
+2022-08-31 20:02:54,137 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [d766ab0b-64e6-472c-95bd-746590dde2f9] [067f2beb-d0b3-4b87-a708-955eb1f482c5] [saveRegisterModel] registration details saved for user: RegisterUserModel(id=16, name=leo, email=leo1@gmail.com03, mobileNumber=123456, userName=leoemes03, password=leo@098, userId=REG1875474330, userOnBoardModel=null, cardModel=null)
+2022-08-31 20:02:54,138 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-3] [d766ab0b-64e6-472c-95bd-746590dde2f9] [067f2beb-d0b3-4b87-a708-955eb1f482c5] [convertModelToRegisterResponseDto] converting registerUserModel RegisterUserModel(id=16, name=leo, email=leo1@gmail.com03, mobileNumber=123456, userName=leoemes03, password=leo@098, userId=REG1875474330, userOnBoardModel=null, cardModel=null) to registerUserResponseDTO
+2022-08-31 20:03:02,128 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-4] [a83233d3-9ec1-472f-8a7d-144e411d8325] [512109c1-1ee6-4564-aecf-ba467feddfe5] [insertDetailsForOnBoarding] On boarding a user: OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG1875474330)
+2022-08-31 20:03:02,133 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [a83233d3-9ec1-472f-8a7d-144e411d8325] [512109c1-1ee6-4564-aecf-ba467feddfe5] [convertDtoToUserOnBoardModel] converting onBoardRequestDTO OnBoardRequestDTO(age=22, aadhaarNumber=543222601171, address=P-14/4, gender=MALE, accountType=CURRENT, userId=REG1875474330) to userOnBoardModel
+2022-08-31 20:03:02,397 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [a83233d3-9ec1-472f-8a7d-144e411d8325] [512109c1-1ee6-4564-aecf-ba467feddfe5] [saveOnBoardModel] saving the on boarding info for user: UserOnBoardModel(id=null, age=22, aadhaarNumber=543222601171, address=P-14/4, accountNumber=616635355322, gender=MALE, accountType=CURRENT, registerUserId=16, registerUserModel=null)
+2022-08-31 20:03:02,422 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [a83233d3-9ec1-472f-8a7d-144e411d8325] [512109c1-1ee6-4564-aecf-ba467feddfe5] [saveOnBoardModel] on boarding info saved for user: UserOnBoardModel(id=13, age=22, aadhaarNumber=543222601171, address=P-14/4, accountNumber=616635355322, gender=MALE, accountType=CURRENT, registerUserId=16, registerUserModel=null)
+2022-08-31 20:03:02,422 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [a83233d3-9ec1-472f-8a7d-144e411d8325] [512109c1-1ee6-4564-aecf-ba467feddfe5] [convertModelToOnBoardResponseDto] converting userOnBoardModel UserOnBoardModel(id=13, age=22, aadhaarNumber=543222601171, address=P-14/4, accountNumber=616635355322, gender=MALE, accountType=CURRENT, registerUserId=16, registerUserModel=null) to onBoardResponseDTO
+2022-08-31 20:03:08,099 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-5] [12866563-326a-4b0e-94d0-fef7cb2e6ad0] [ca710342-c0df-411e-85a7-7fa30972d0d2] [generateCardDetails] generating card for user with user ID: CardRequestDTO(userId=REG1875474330)
+2022-08-31 20:03:08,102 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-5] [12866563-326a-4b0e-94d0-fef7cb2e6ad0] [ca710342-c0df-411e-85a7-7fa30972d0d2] [convertDtoToCardModel] converting cardRequestDTO CardRequestDTO(userId=REG1875474330) to cardModel
+2022-08-31 20:03:08,133 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-5] [12866563-326a-4b0e-94d0-fef7cb2e6ad0] [ca710342-c0df-411e-85a7-7fa30972d0d2] [saveCardModel] saving the card details for : CardModel(id=null, cardNumber=416607165774, name=leo, cvv=631, pin=null, cardState=DISABLED, cardId=16, registerUser=null)
+2022-08-31 20:03:08,167 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-5] [12866563-326a-4b0e-94d0-fef7cb2e6ad0] [ca710342-c0df-411e-85a7-7fa30972d0d2] [saveCardModel] card details saved for : CardModel(id=14, cardNumber=416607165774, name=leo, cvv=631, pin=null, cardState=DISABLED, cardId=16, registerUser=null)
+2022-08-31 20:03:08,168 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-5] [12866563-326a-4b0e-94d0-fef7cb2e6ad0] [ca710342-c0df-411e-85a7-7fa30972d0d2] [convertCardModelToDto] converting cardModel CardModel(id=14, cardNumber=416607165774, name=leo, cvv=631, pin=null, cardState=DISABLED, cardId=16, registerUser=null) to cardResponseDTO
+2022-08-31 20:03:15,991 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-6] [69e3c50c-f3fd-40ee-8ffa-fde03c6121ab] [f16401f5-28c6-480e-b66c-4c8f34f4ff18] [setPin] setting pin for card : SetPinRequestDTO(pin=1234, cardNumber=416607165774)
+2022-08-31 20:03:15,999 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-6] [69e3c50c-f3fd-40ee-8ffa-fde03c6121ab] [f16401f5-28c6-480e-b66c-4c8f34f4ff18] [setPin] fetching card details for card number: 416607165774
+2022-08-31 20:03:30,514 INFO com.bankingservice.banking.controller.CardController [http-nio-9191-exec-7] [2007da67-1dc0-4d64-9197-58eac9115e25] [c9e299c1-954f-423b-95c6-13d839353e8c] Controller UserID: REG1875474330
+2022-08-31 20:03:30,515 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-7] [2007da67-1dc0-4d64-9197-58eac9115e25] [c9e299c1-954f-423b-95c6-13d839353e8c] [getCardDetails] fetching card details for user ID : REG1875474330
+2022-08-31 20:03:30,516 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-7] [2007da67-1dc0-4d64-9197-58eac9115e25] [c9e299c1-954f-423b-95c6-13d839353e8c] [findCardDetails] fetching card details for user Id: REG1875474330
+2022-08-31 20:05:01,769 ERROR com.bankingservice.banking.exception.ApplicationExceptionHandler [http-nio-9191-exec-3] [d766ab0b-64e6-472c-95bd-746590dde2f9] [067f2beb-d0b3-4b87-a708-955eb1f482c5] UserNotFoundException: [Ljava.lang.StackTraceElement;@6ff8d8c
+2022-08-31 20:05:13,071 INFO com.bankingservice.banking.services.AccountService [http-nio-9191-exec-4] [a83233d3-9ec1-472f-8a7d-144e411d8325] [512109c1-1ee6-4564-aecf-ba467feddfe5] [insertDetailsForRegistration] Registering a new user: RegisterRequestDTO(name=leo, email=leo1@gmail.com04, mobileNumber=123456, userName=leoemes04, password=leo@098)
+2022-08-31 20:05:13,072 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [a83233d3-9ec1-472f-8a7d-144e411d8325] [512109c1-1ee6-4564-aecf-ba467feddfe5] [convertDtoToRegisterUserModel] converting registerRequestDTO RegisterRequestDTO(name=leo, email=leo1@gmail.com04, mobileNumber=123456, userName=leoemes04, password=leo@098) to registerUserModel
+2022-08-31 20:05:13,074 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [a83233d3-9ec1-472f-8a7d-144e411d8325] [512109c1-1ee6-4564-aecf-ba467feddfe5] [saveRegisterModel] saving the registration details for user: RegisterUserModel(id=null, name=leo, email=leo1@gmail.com04, mobileNumber=123456, userName=leoemes04, password=leo@098, userId=REG256045601, userOnBoardModel=null, cardModel=null)
+2022-08-31 20:05:13,098 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [a83233d3-9ec1-472f-8a7d-144e411d8325] [512109c1-1ee6-4564-aecf-ba467feddfe5] [saveRegisterModel] registration details saved for user: RegisterUserModel(id=17, name=leo, email=leo1@gmail.com04, mobileNumber=123456, userName=leoemes04, password=leo@098, userId=REG256045601, userOnBoardModel=null, cardModel=null)
+2022-08-31 20:05:13,098 INFO com.bankingservice.banking.services.servicehelper.AccountServiceHelper [http-nio-9191-exec-4] [a83233d3-9ec1-472f-8a7d-144e411d8325] [512109c1-1ee6-4564-aecf-ba467feddfe5] [convertModelToRegisterResponseDto] converting registerUserModel RegisterUserModel(id=17, name=leo, email=leo1@gmail.com04, mobileNumber=123456, userName=leoemes04, password=leo@098, userId=REG256045601, userOnBoardModel=null, cardModel=null) to registerUserResponseDTO
+2022-08-31 20:23:20,154 INFO com.bankingservice.banking.services.AccountService [main] [] [] [getUserDetails] fetching the user details with user Id : kZEpSQO2H5
+2022-08-31 20:26:18,266 INFO com.bankingservice.banking.services.AccountService [main] [] [] [getUserDetails] fetching the user details with user Id : PEZVzItBWL
+2022-08-31 20:26:18,272 ERROR com.bankingservice.banking.services.AccountService [main] [] [] [getUserDetails] user does not exist for user ID : PEZVzItBWL
+2022-08-31 20:26:29,321 INFO com.bankingservice.banking.services.AccountService [main] [] [] [getUserDetails] fetching the user details with user Id : meIeVtpZcS
+2022-08-31 20:26:29,327 ERROR com.bankingservice.banking.services.AccountService [main] [] [] [getUserDetails] user does not exist for user ID : meIeVtpZcS
+2022-08-31 20:26:40,418 INFO com.bankingservice.banking.services.AccountService [main] [] [] [generateCardDetails] generating card for user with user ID: CardRequestDTO(userId=T2l2B3RXZG)
+2022-08-31 20:26:40,731 INFO com.bankingservice.banking.services.AccountService [main] [] [] [generateCardDetails] generating card for user with user ID: CardRequestDTO(userId=T2l2B3RXZG)
+2022-08-31 20:26:40,735 ERROR com.bankingservice.banking.services.AccountService [main] [] [] [generateCardDetails] card already exists for userId: T2l2B3RXZG
+2022-08-31 20:26:40,928 INFO com.bankingservice.banking.services.AccountService [main] [] [] [generateCardDetails] generating card for user with user ID: CardRequestDTO(userId=T2l2B3RXZG)
+2022-08-31 20:26:40,933 ERROR com.bankingservice.banking.services.AccountService [main] [] [] [generateCardDetails] user does not exist with user ID: T2l2B3RXZG
+2022-08-31 20:26:41,064 INFO com.bankingservice.banking.services.AccountService [main] [] [] [getCardDetails] fetching card details for user ID : T2l2B3RXZG
+2022-08-31 20:26:41,514 INFO com.bankingservice.banking.services.AccountService [main] [] [] [getCardDetails] fetching card details for user ID : T2l2B3RXZG
+2022-08-31 20:26:41,520 ERROR com.bankingservice.banking.services.AccountService [main] [] [] [getCardDetails] card does not exist for user ID : T2l2B3RXZG
+2022-08-31 20:26:41,665 INFO com.bankingservice.banking.services.AccountService [main] [] [] [getCardDetails] fetching card details for user ID : T2l2B3RXZG
+2022-08-31 20:26:41,670 ERROR com.bankingservice.banking.services.AccountService [main] [] [] [getCardDetails] user does not exist for user ID : T2l2B3RXZG
+2022-08-31 20:26:41,928 INFO com.bankingservice.banking.services.AccountService [main] [] [] [getUserDetails] fetching the user details with user Id : T2l2B3RXZG
+2022-08-31 20:26:42,169 INFO com.bankingservice.banking.services.AccountService [main] [] [] [getUserDetails] fetching the user details with user Id : T2l2B3RXZG
+2022-08-31 20:26:42,176 ERROR com.bankingservice.banking.services.AccountService [main] [] [] [getUserDetails] user does not exist for user ID : T2l2B3RXZG
+2022-08-31 20:26:42,375 INFO com.bankingservice.banking.services.AccountService [main] [] [] [insertDetailsForOnBoarding] On boarding a user: OnBoardRequestDTO(age=770429496, aadhaarNumber=315979947966673126, address=ia1UbpOH3u, gender=MALE, accountType=CURRENT, userId=T2l2B3RXZG)
+2022-08-31 20:26:42,713 INFO com.bankingservice.banking.services.AccountService [main] [] [] [insertDetailsForOnBoarding] On boarding a user: OnBoardRequestDTO(age=770429496, aadhaarNumber=315979947966673126, address=ia1UbpOH3u, gender=MALE, accountType=CURRENT, userId=T2l2B3RXZG)
+2022-08-31 20:26:42,917 INFO com.bankingservice.banking.services.AccountService [main] [] [] [insertDetailsForOnBoarding] On boarding a user: OnBoardRequestDTO(age=770429496, aadhaarNumber=315979947966673126, address=ia1UbpOH3u, gender=MALE, accountType=CURRENT, userId=T2l2B3RXZG)
+2022-08-31 20:26:42,926 ERROR com.bankingservice.banking.services.AccountService [main] [] [] [saveRegisterModel] account already exists for userId: T2l2B3RXZG
+2022-08-31 20:26:43,135 INFO com.bankingservice.banking.services.AccountService [main] [] [] [insertDetailsForRegistration] Registering a new user: RegisterRequestDTO(name=qguscILhTg, email=xCHgOchzZP, mobileNumber=2685187617609516398, userName=pxgLcoWUmt, password=lOJPtCTMyN)
+2022-08-31 20:26:43,483 INFO com.bankingservice.banking.services.AccountService [main] [] [] [insertDetailsForRegistration] Registering a new user: RegisterRequestDTO(name=qguscILhTg, email=xCHgOchzZP, mobileNumber=2685187617609516398, userName=pxgLcoWUmt, password=lOJPtCTMyN)
+2022-08-31 20:26:43,538 ERROR com.bankingservice.banking.services.AccountService [main] [] [] [insertDetailsForRegistration] details insertion failed in db for request: RegisterRequestDTO(name=qguscILhTg, email=xCHgOchzZP, mobileNumber=2685187617609516398, userName=pxgLcoWUmt, password=lOJPtCTMyN)
+org.springframework.dao.DataIntegrityViolationException: 
+	at mockit.internal.expectations.invocation.InvocationResult$ThrowableResult.produceResult(InvocationResult.java:41)
+	at mockit.internal.expectations.invocation.InvocationResult.produceResult(InvocationResult.java:22)
+	at mockit.internal.expectations.invocation.InvocationResults.produceResult(InvocationResults.java:124)
+	at mockit.internal.expectations.Expectation.produceResult(Expectation.java:48)
+	at mockit.internal.expectations.ReplayPhase.produceResult(ReplayPhase.java:108)
+	at mockit.internal.expectations.ReplayPhase.handleInvocation(ReplayPhase.java:52)
+	at mockit.internal.expectations.RecordAndReplayExecution.recordOrReplay(RecordAndReplayExecution.java:170)
+	at com.bankingservice.banking.services.servicehelper.AccountServiceHelper.saveRegisterModel(AccountServiceHelper.java)
+	at com.bankingservice.banking.services.AccountService.insertDetailsForRegistration(AccountService.java:48)
+	at com.bankingservice.banking.services.AccountServiceTest.testInsertDetailsForRegistrationException(AccountServiceTest.java:149)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:124)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:583)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:719)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:989)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:648)
+	at org.testng.TestRunner.run(TestRunner.java:505)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:455)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:450)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:415)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:364)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:84)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1208)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1137)
+	at org.testng.TestNG.runSuites(TestNG.java:1049)
+	at org.testng.TestNG.run(TestNG.java:1017)
+	at com.intellij.rt.testng.IDEARemoteTestNG.run(IDEARemoteTestNG.java:66)
+	at com.intellij.rt.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:109)
+2022-08-31 20:26:43,700 INFO com.bankingservice.banking.services.AccountService [main] [] [] [setPin] setting pin for card : SetPinRequestDTO(pin=1967764695, cardNumber=4038263027211082284)
+2022-08-31 20:26:43,980 INFO com.bankingservice.banking.services.AccountService [main] [] [] [setPin] setting pin for card : SetPinRequestDTO(pin=1967764695, cardNumber=4038263027211082284)
+2022-08-31 20:26:44,024 ERROR com.bankingservice.banking.services.AccountService [main] [] [] [setPin] card not found for card number: 4038263027211082284
+2022-08-31 20:27:05,282 INFO com.bankingservice.banking.controller.CardController [main] [] [] Controller UserID: qvQEDNrn4c
