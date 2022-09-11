@@ -5,10 +5,7 @@ import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.CardResponseDTO;
 import com.bankingservice.banking.dto.response.SetPinResponseDTO;
 import com.bankingservice.banking.enums.CardState;
-import com.bankingservice.banking.exception.CardNotFoundException;
-import com.bankingservice.banking.exception.InsertionFailedException;
-import com.bankingservice.banking.exception.UserIdNotFoundException;
-import com.bankingservice.banking.exception.UserNotFoundException;
+import com.bankingservice.banking.exception.*;
 import com.bankingservice.banking.models.mysql.CardModel;
 import com.bankingservice.banking.services.servicehelper.CardServiceHelper;
 import mockit.Expectations;
@@ -20,6 +17,8 @@ import org.apache.commons.lang3.RandomUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.servlet.http.HttpSession;
 
 public class CardServiceTest {
     @Tested
@@ -35,7 +34,9 @@ public class CardServiceTest {
     private static final int cardId = RandomUtils.nextInt();
     private static final long cardNumber = RandomUtils.nextLong();
     private static final String userId = RandomStringUtils.randomAlphanumeric(10);
-
+    private static final SetPinRequestDTO setPinRequestDTO = new SetPinRequestDTO();
+    private static final CardRequestDTO cardRequestDTO = new CardRequestDTO();
+    private static final HttpSession session = null;
 
     @BeforeMethod
     public void setUp() {
@@ -45,6 +46,9 @@ public class CardServiceTest {
         cardModel.setCardNumber(cardNumber);
         cardModel.setName(name);
         cardModel.setCardId(cardId);
+        setPinRequestDTO.setCardNumber(cardNumber);
+        setPinRequestDTO.setPin(pin);
+        cardRequestDTO.setUserId(userId);
     }
 
     @Test
@@ -53,7 +57,7 @@ public class CardServiceTest {
             cardServiceHelper.saveCardModel((CardModel) any);
             result = cardModel;
         }};
-        CardResponseDTO cardResponseDTO = cardService.generateCardDetails(makeCardRequestDTO());
+        CardResponseDTO cardResponseDTO = cardService.generateCardDetails(cardRequestDTO);
         Assert.assertNotNull(cardResponseDTO);
         new Verifications() {{
             cardServiceHelper.saveCardModel((CardModel) any);
@@ -67,7 +71,7 @@ public class CardServiceTest {
             cardServiceHelper.saveCardModel((CardModel) any);
             result = new InsertionFailedException();
         }};
-        CardResponseDTO cardResponseDTO = cardService.generateCardDetails(makeCardRequestDTO());
+        CardResponseDTO cardResponseDTO = cardService.generateCardDetails(cardRequestDTO);
         Assert.assertNotNull(cardResponseDTO);
         new Verifications() {{
             cardServiceHelper.saveCardModel((CardModel) any);
@@ -81,7 +85,7 @@ public class CardServiceTest {
             cardServiceHelper.saveCardModel((CardModel) any);
             result = new UserIdNotFoundException();
         }};
-        CardResponseDTO cardResponseDTO = cardService.generateCardDetails(makeCardRequestDTO());
+        CardResponseDTO cardResponseDTO = cardService.generateCardDetails(cardRequestDTO);
         Assert.assertNotNull(cardResponseDTO);
         new Verifications() {{
             cardServiceHelper.saveCardModel((CardModel) any);
@@ -95,7 +99,7 @@ public class CardServiceTest {
             cardServiceHelper.setPin((SetPinRequestDTO) any);
             result = cardModel;
         }};
-        SetPinResponseDTO setPinResponseDTO = cardService.setPin(makeSetPinRequestDTO());
+        SetPinResponseDTO setPinResponseDTO = cardService.setPin(setPinRequestDTO);
         Assert.assertNotNull(setPinResponseDTO);
         new Verifications() {{
             cardServiceHelper.setPin((SetPinRequestDTO) any);
@@ -109,7 +113,7 @@ public class CardServiceTest {
             cardServiceHelper.setPin((SetPinRequestDTO) any);
             result = new CardNotFoundException();
         }};
-        SetPinResponseDTO setPinResponseDTO = cardService.setPin(makeSetPinRequestDTO());
+        SetPinResponseDTO setPinResponseDTO = cardService.setPin(setPinRequestDTO);
         Assert.assertNotNull(setPinResponseDTO);
         new Verifications() {{
             cardServiceHelper.setPin((SetPinRequestDTO) any);
@@ -118,12 +122,12 @@ public class CardServiceTest {
     }
 
     @Test
-    public void testGetCardDetails() throws UserNotFoundException, CardNotFoundException {
+    public void testGetCardDetails() throws UserNotFoundException, CardNotFoundException, InvalidOtpException {
         new Expectations() {{
             cardServiceHelper.findCardDetails(userId);
             result = cardModel;
         }};
-        CardResponseDTO cardResponseDTO = cardService.getCardDetails(userId);
+        CardResponseDTO cardResponseDTO = cardService.getCardDetails(cardRequestDTO, session);
         Assert.assertNotNull(cardResponseDTO);
         new Verifications() {{
             cardServiceHelper.findCardDetails(userId);
@@ -132,12 +136,12 @@ public class CardServiceTest {
     }
 
     @Test(expectedExceptions = UserNotFoundException.class)
-    public void testGetCardDetailsUserNotFoundException() throws UserNotFoundException, CardNotFoundException {
+    public void testGetCardDetailsUserNotFoundException() throws UserNotFoundException, CardNotFoundException, InvalidOtpException {
         new Expectations() {{
             cardServiceHelper.findCardDetails(userId);
             result = new UserNotFoundException();
         }};
-        CardResponseDTO cardResponseDTO = cardService.getCardDetails(userId);
+        CardResponseDTO cardResponseDTO = cardService.getCardDetails(cardRequestDTO, session);
         Assert.assertNotNull(cardResponseDTO);
         new Verifications() {{
             cardServiceHelper.findCardDetails(userId);
@@ -146,30 +150,17 @@ public class CardServiceTest {
     }
 
     @Test(expectedExceptions = CardNotFoundException.class)
-    public void testGetCardDetailsCardNotFoundException() throws UserNotFoundException, CardNotFoundException {
+    public void testGetCardDetailsCardNotFoundException() throws UserNotFoundException, CardNotFoundException, InvalidOtpException {
         new Expectations() {{
             cardServiceHelper.findCardDetails(userId);
             result = new CardNotFoundException();
         }};
-        CardResponseDTO cardResponseDTO = cardService.getCardDetails(userId);
+        CardResponseDTO cardResponseDTO = cardService.getCardDetails(cardRequestDTO, session);
         Assert.assertNotNull(cardResponseDTO);
         new Verifications() {{
             cardServiceHelper.findCardDetails(userId);
             times = 1;
         }};
-    }
-
-    private SetPinRequestDTO makeSetPinRequestDTO() {
-        SetPinRequestDTO setPinRequestDTO = new SetPinRequestDTO();
-        setPinRequestDTO.setCardNumber(cardNumber);
-        setPinRequestDTO.setPin(pin);
-        return setPinRequestDTO;
-    }
-
-    private CardRequestDTO makeCardRequestDTO() {
-        CardRequestDTO cardRequestDTO = new CardRequestDTO();
-        cardRequestDTO.setUserId(userId);
-        return cardRequestDTO;
     }
 
 }

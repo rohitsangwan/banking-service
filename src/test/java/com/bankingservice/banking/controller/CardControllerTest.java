@@ -6,10 +6,7 @@ import com.bankingservice.banking.dto.response.BaseResponseDTO;
 import com.bankingservice.banking.dto.response.CardResponseDTO;
 import com.bankingservice.banking.dto.response.SetPinResponseDTO;
 import com.bankingservice.banking.enums.CardState;
-import com.bankingservice.banking.exception.CardNotFoundException;
-import com.bankingservice.banking.exception.InsertionFailedException;
-import com.bankingservice.banking.exception.UserIdNotFoundException;
-import com.bankingservice.banking.exception.UserNotFoundException;
+import com.bankingservice.banking.exception.*;
 import com.bankingservice.banking.services.CardService;
 import mockit.Expectations;
 import mockit.Injectable;
@@ -21,6 +18,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.servlet.http.HttpSession;
+
 public class CardControllerTest {
     @Tested
     private CardController cardController;
@@ -31,7 +30,7 @@ public class CardControllerTest {
     private static final String name = RandomStringUtils.randomAlphabetic(10);
     private static final long cardNumber = RandomUtils.nextLong();
     private static final String userId = RandomStringUtils.randomAlphanumeric(10);
-
+    private static final HttpSession session = null;
 
     CardRequestDTO cardRequestDTO;
     CardResponseDTO cardResponseDTO;
@@ -94,17 +93,17 @@ public class CardControllerTest {
     }
 
     @Test
-    public void getCardInfo() throws UserNotFoundException, CardNotFoundException {
+    public void getCardInfo() throws UserNotFoundException, CardNotFoundException, InvalidOtpException {
         new Expectations() {{
-            cardService.getCardDetails(userId);
+            cardService.getCardDetails((CardRequestDTO) any, (HttpSession) any);
             result = cardResponseDTO;
         }};
-        BaseResponseDTO baseResponseDTO = cardController.getCardInfo(userId).getBody();
+        BaseResponseDTO baseResponseDTO = cardController.getCardInfo(cardRequestDTO, session).getBody();
         Assert.assertNotNull(baseResponseDTO);
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
         new Verifications() {{
-            cardService.getCardDetails(userId);
+            cardService.getCardDetails((CardRequestDTO) any,  (HttpSession) any);
             times = 1;
         }};
     }

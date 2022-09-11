@@ -3,10 +3,7 @@ package com.bankingservice.banking.controller;
 import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.BaseResponseDTO;
-import com.bankingservice.banking.exception.CardNotFoundException;
-import com.bankingservice.banking.exception.InsertionFailedException;
-import com.bankingservice.banking.exception.UserIdNotFoundException;
-import com.bankingservice.banking.exception.UserNotFoundException;
+import com.bankingservice.banking.exception.*;
 import com.bankingservice.banking.services.AccountService;
 import com.bankingservice.banking.services.CardService;
 import com.bankingservice.banking.utils.CreateMetaData;
@@ -16,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * Controller for card apis
@@ -64,14 +63,13 @@ public class CardController {
     /**
      * entry point controller to fetch card details
      *
-     * @param userId
+     * @param cardRequestDTO
      * @return ResponseEntity
      */
-    @GetMapping("/card-info/{userId}")
-    public ResponseEntity<BaseResponseDTO> getCardInfo(@PathVariable("userId") String userId) throws UserNotFoundException, CardNotFoundException {
-        logger.info("Controller UserID: {}", userId);
+    @GetMapping("/card-info")
+    public ResponseEntity<BaseResponseDTO> getCardInfo(@RequestBody CardRequestDTO cardRequestDTO, HttpSession httpSession) throws UserNotFoundException, CardNotFoundException, InvalidOtpException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO<>();
-        baseResponseDTO.setData(cardService.getCardDetails(userId));
+        baseResponseDTO.setData(cardService.getCardDetails(cardRequestDTO, httpSession));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }

@@ -59,11 +59,31 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Handles user not found exception
+     *
+     * @param e
+     * @return response entity
+     */
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<BaseResponseDTO> handleUserNotFoundException(UserNotFoundException e){
         logger.error("UserNotFoundException: " +  e.getStackTrace());
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), MDC.get(REQUEST_ID), MDC.get(RESPONSE_ID)));
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handles invalid otp exception
+     *
+     * @param e
+     * @return response entity
+     */
+    @ExceptionHandler(InvalidOtpException.class)
+    public ResponseEntity<BaseResponseDTO> handleInvalidOtpException(InvalidOtpException e){
+        logger.error("InvalidOtpException: " +  e.getStackTrace());
+        BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
+        baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), MDC.get(REQUEST_ID), MDC.get(RESPONSE_ID)));
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.BAD_REQUEST);
     }
 }

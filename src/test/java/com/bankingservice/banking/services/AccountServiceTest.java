@@ -55,10 +55,25 @@ public class AccountServiceTest {
     private static final long aadhaarNumber = RandomUtils.nextLong();
     private static final String address = RandomStringUtils.randomAlphanumeric(10);
     private static final String userId = RandomStringUtils.randomAlphanumeric(10);
+    private static final OnBoardRequestDTO onBoardRequestDTO = new OnBoardRequestDTO();
+    private static final RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO();
 
 
     @BeforeMethod
     public void setUp() {
+        registerRequestDTO.setEmail(email);
+        registerRequestDTO.setMobileNumber(mobileNumber);
+        registerRequestDTO.setName(name);
+        registerRequestDTO.setPassword(password);
+        registerRequestDTO.setUserName(userName);
+
+        onBoardRequestDTO.setAge(age);
+        onBoardRequestDTO.setAadhaarNumber(aadhaarNumber);
+        onBoardRequestDTO.setAddress(address);
+        onBoardRequestDTO.setGender(Gender.MALE);
+        onBoardRequestDTO.setAccountType(AccountType.CURRENT);
+        onBoardRequestDTO.setUserId(userId);
+
         registerUserModel = new RegisterUserModel();
         registerUserModel.setId(id);
         registerUserModel.setName(name);
@@ -109,7 +124,7 @@ public class AccountServiceTest {
             accountServiceHelper.saveRegisterModel((RegisterUserModel) any);
             result = registerUserModel;
         }};
-        RegisterUserResponseDTO registerUserResponseDTO = accountService.insertDetailsForRegistration(makeRegisterRequestDTO());
+        RegisterUserResponseDTO registerUserResponseDTO = accountService.insertDetailsForRegistration(registerRequestDTO);
         Assert.assertNotNull(registerUserResponseDTO);
         new Verifications() {{
             accountServiceHelper.saveRegisterModel((RegisterUserModel) any);
@@ -123,7 +138,7 @@ public class AccountServiceTest {
             accountServiceHelper.saveRegisterModel((RegisterUserModel) any);
             result = new DataIntegrityViolationException("");
         }};
-        RegisterUserResponseDTO registerUserResponseDTO = accountService.insertDetailsForRegistration(makeRegisterRequestDTO());
+        RegisterUserResponseDTO registerUserResponseDTO = accountService.insertDetailsForRegistration(registerRequestDTO);
         Assert.assertNotNull(registerUserResponseDTO);
         new Verifications() {{
             accountServiceHelper.saveRegisterModel((RegisterUserModel) any);
@@ -137,7 +152,7 @@ public class AccountServiceTest {
             accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             result = userOnBoardModel;
         }};
-        OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
+        OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(onBoardRequestDTO);
         Assert.assertNotNull(onBoardResponseDTO);
         new Verifications() {{
             accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
@@ -151,7 +166,7 @@ public class AccountServiceTest {
             accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             result = new DataIntegrityViolationException("");
         }};
-        OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
+        OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(onBoardRequestDTO);
         Assert.assertNotNull(onBoardResponseDTO);
         new Verifications() {{
             accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
@@ -165,7 +180,7 @@ public class AccountServiceTest {
             accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             result = new UserIdNotFoundException();
         }};
-        OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(makeOnBoardRequestDTO());
+        OnBoardResponseDTO onBoardResponseDTO = accountService.insertDetailsForOnBoarding(onBoardRequestDTO);
         Assert.assertNotNull(onBoardResponseDTO);
         new Verifications() {{
             accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
@@ -199,27 +214,6 @@ public class AccountServiceTest {
             accountServiceHelper.getDetails(userId);
             times = 1;
         }};
-    }
-
-    private OnBoardRequestDTO makeOnBoardRequestDTO() {
-        OnBoardRequestDTO onBoardRequestDTO = new OnBoardRequestDTO();
-        onBoardRequestDTO.setAge(age);
-        onBoardRequestDTO.setAadhaarNumber(aadhaarNumber);
-        onBoardRequestDTO.setAddress(address);
-        onBoardRequestDTO.setGender(Gender.MALE);
-        onBoardRequestDTO.setAccountType(AccountType.CURRENT);
-        onBoardRequestDTO.setUserId(userId);
-        return onBoardRequestDTO;
-    }
-
-    private RegisterRequestDTO makeRegisterRequestDTO() {
-        RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO();
-        registerRequestDTO.setEmail(email);
-        registerRequestDTO.setMobileNumber(mobileNumber);
-        registerRequestDTO.setName(name);
-        registerRequestDTO.setPassword(password);
-        registerRequestDTO.setUserName(userName);
-        return registerRequestDTO;
     }
 
 }

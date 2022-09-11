@@ -1,27 +1,20 @@
 package com.bankingservice.banking.services.servicehelper;
 
-import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
-import com.bankingservice.banking.dto.request.SetPinRequestDTO;
-import com.bankingservice.banking.dto.response.CardResponseDTO;
 import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
 import com.bankingservice.banking.dto.response.RegisterUserResponseDTO;
 import com.bankingservice.banking.dto.response.UserDetailsResponseDTO;
-import com.bankingservice.banking.enums.CardState;
 import com.bankingservice.banking.enums.ErrorCode;
-import com.bankingservice.banking.exception.CardNotFoundException;
 import com.bankingservice.banking.exception.InsertionFailedException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.exception.UserNotFoundException;
-import com.bankingservice.banking.models.mysql.CardModel;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
 import com.bankingservice.banking.repository.CardRepository;
 import com.bankingservice.banking.repository.RegisterUserRepository;
 import com.bankingservice.banking.repository.UserOnBoardRepository;
 import com.bankingservice.banking.utils.AccountNumberUtil;
-import com.bankingservice.banking.utils.CardUtil;
 import com.bankingservice.banking.utils.UniqueValueUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

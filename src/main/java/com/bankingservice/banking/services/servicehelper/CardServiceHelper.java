@@ -5,14 +5,12 @@ import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.CardResponseDTO;
 import com.bankingservice.banking.enums.CardState;
 import com.bankingservice.banking.enums.ErrorCode;
-import com.bankingservice.banking.exception.CardNotFoundException;
-import com.bankingservice.banking.exception.InsertionFailedException;
-import com.bankingservice.banking.exception.UserIdNotFoundException;
-import com.bankingservice.banking.exception.UserNotFoundException;
+import com.bankingservice.banking.exception.*;
 import com.bankingservice.banking.models.mysql.CardModel;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.repository.CardRepository;
 import com.bankingservice.banking.repository.RegisterUserRepository;
+import com.bankingservice.banking.services.EmailService;
 import com.bankingservice.banking.utils.CardUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Component
@@ -30,6 +29,8 @@ public class CardServiceHelper {
     private CardRepository cardRepository;
     @Autowired
     private RegisterUserRepository registerUserRepository;
+    @Autowired
+    private EmailService emailService;
 
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceHelper.class);
 
@@ -143,6 +144,47 @@ public class CardServiceHelper {
             logger.error("[findCardDetails] user does not exist for user ID : {}", userId);
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
                     String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
+                    ErrorCode.USER_NOT_FOUND.getDisplayMessage());
+        }
+    }
+
+    public Boolean sendOtp(CardRequestDTO cardRequestDTO, HttpSession httpSession) throws UserNotFoundException {
+        Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(cardRequestDTO.getUserId());
+        if (registerUserModel.isPresent()) {
+            Boolean isEmailSent = emailService.sendEmail(registerUserModel.get().getEmail(), cardRequestDTO, httpSession);
+            if (isEmailSent) {
+                logger.info("[sendOtp] Email sent successfully to : {}", registerUserModel.get().getEmail());
+                return true;
+            } else {
+                logger.info("[sendOtp] Email sending failed to : {}", registerUserModel.get().getEmail());
+                return false;
+            }
+        }
+        else {
+            logger.error("[sendOtp] user does not exist for user ID : {}", cardRequestDTO.getUserId());
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
+                    String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), cardRequestDTO.getUserId()),
+                    ErrorCode.USER_NOT_FOUND.getDisplayMessage());
+        }
+    }
+
+    public Boolean validateOtp(CardRequestDTO cardRequestDTO, HttpSession httpSession) throws UserNotFoundException, InvalidOtpException {
+        Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(cardRequestDTO.getUserId());
+        if (registerUserModel.isPresent()) {
+            Boolean isOtpValid = emailService.validateOtp(registerUserModel.get().getEmail(), cardRequestDTO, httpSession);
+            if(isOtpValid){
+                logger.info("[validateOtp] OTP is valid which was sent to : {}", registerUserModel.get().getEmail());
+                return true;
+            }
+            else {
+                logger.info("[validateOtp] OTP is invalid which was sent to : {}", registerUserModel.get().getEmail());
+                return false;
+            }
+        }
+        else {
+            logger.error("[validateOtp] user does not exist for user ID : {}", cardRequestDTO.getUserId());
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
+                    String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), cardRequestDTO.getUserId()),
                     ErrorCode.USER_NOT_FOUND.getDisplayMessage());
         }
     }
