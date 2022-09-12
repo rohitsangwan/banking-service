@@ -10,7 +10,6 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "register_user")
 public class RegisterUserModel {

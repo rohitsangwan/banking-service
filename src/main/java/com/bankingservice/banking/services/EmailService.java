@@ -3,6 +3,7 @@ package com.bankingservice.banking.services;
 import com.bankingservice.banking.constants.Constants;
 import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.enums.ErrorCode;
+import com.bankingservice.banking.enums.OtpStatus;
 import com.bankingservice.banking.exception.InvalidOtpException;
 import com.bankingservice.banking.exception.OtpExpiredException;
 import com.bankingservice.banking.models.mysql.OtpModel;
@@ -16,6 +17,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.sql.Timestamp;
+import java.util.Optional;
 import java.util.Properties;
 
 @Service
@@ -60,34 +62,38 @@ public class EmailService {
 
     public Boolean validateOtp(RegisterUserModel registerUserModel, CardRequestDTO cardRequestDTO) throws InvalidOtpException, OtpExpiredException {
         try {
-            OtpModel otpModel = otpRepository.findByOtpId(registerUserModel.getId());
-            if(otpModel.getOtp() == null)
-                throw  new InvalidOtpException(ErrorCode.OTP_VALIDATION_FAILED,
-                        String.format(ErrorCode.OTP_VALIDATION_FAILED.getErrorMessage(), registerUserModel.getEmail()),
-                        ErrorCode.OTP_VALIDATION_FAILED.getDisplayMessage());
-            Long myOtp = otpModel.getOtp();
-            if (myOtp.equals(cardRequestDTO.getOtp())) {
-                if (System.currentTimeMillis() - otpModel.getTime().getTime() > 60000) {
-                    OtpModel myOtpModel  = sendEmail(registerUserModel.getEmail());
-                    otpModel.setOtp(myOtpModel.getOtp());
-                    otpModel.setTime(myOtpModel.getTime());
-                    otpRepository.save(otpModel);
-                    throw new OtpExpiredException(ErrorCode.OTP_EXPIRED, ErrorCode.OTP_EXPIRED.getErrorMessage(),
-                            ErrorCode.OTP_EXPIRED.getDisplayMessage());
+            Optional<OtpModel> otpModel = otpRepository.findByOtpId(registerUserModel.getId());
+            if (otpModel.isPresent()) {
+                Long myOtp = otpModel.get().getOtp();
+                if (myOtp.equals(cardRequestDTO.getOtp())) {
+                    if (System.currentTimeMillis() - otpModel.get().getTime().getTime() > 60000 || otpModel.get().getOtpStatus() == OtpStatus.EXPIRED) {
+                        OtpModel myOtpModel = sendEmail(registerUserModel.getEmail());
+                        otpModel.get().setOtp(myOtpModel.getOtp());
+                        otpModel.get().setTime(myOtpModel.getTime());
+                        otpModel.get().setOtpStatus(OtpStatus.ACTIVE);
+                        otpRepository.save(otpModel.get());
+                        throw new OtpExpiredException(ErrorCode.OTP_EXPIRED, ErrorCode.OTP_EXPIRED.getErrorMessage(),
+                                ErrorCode.OTP_EXPIRED.getDisplayMessage());
+                    } else {
+                        otpModel.get().setOtpStatus(OtpStatus.EXPIRED);
+                        otpRepository.save(otpModel.get());
+                        return true;
+                    }
+                } else {
+                    throw new InvalidOtpException(ErrorCode.OTP_VALIDATION_FAILED,
+                            String.format(ErrorCode.OTP_VALIDATION_FAILED.getErrorMessage(), registerUserModel.getEmail()),
+                            ErrorCode.OTP_VALIDATION_FAILED.getDisplayMessage());
                 }
-                else {
-                    return true;
-                }
-            } else {
+            } else
                 throw new InvalidOtpException(ErrorCode.OTP_VALIDATION_FAILED,
                         String.format(ErrorCode.OTP_VALIDATION_FAILED.getErrorMessage(), registerUserModel.getEmail()),
                         ErrorCode.OTP_VALIDATION_FAILED.getDisplayMessage());
-            }
+
         } catch (InvalidOtpException | NullPointerException e) {
             throw new InvalidOtpException(ErrorCode.OTP_VALIDATION_FAILED,
                     String.format(ErrorCode.OTP_VALIDATION_FAILED.getErrorMessage(), registerUserModel.getEmail()),
                     ErrorCode.OTP_VALIDATION_FAILED.getDisplayMessage());
-        }catch (OtpExpiredException e){
+        } catch (OtpExpiredException e) {
             throw new OtpExpiredException(ErrorCode.OTP_EXPIRED, ErrorCode.OTP_EXPIRED.getErrorMessage(),
                     ErrorCode.OTP_EXPIRED.getDisplayMessage());
         }

@@ -1,5 +1,6 @@
 package com.bankingservice.banking.models.mysql;
 
+import com.bankingservice.banking.enums.OtpStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -24,6 +25,10 @@ public class OtpModel {
 
     @Column(name = "time")
     private Timestamp time;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private OtpStatus otpStatus;
 
     @Column(name = "otp_id", unique = true)
     private Integer otpId;
