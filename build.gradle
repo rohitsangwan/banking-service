@@ -36,6 +36,9 @@ dependencies {
 	testImplementation group: 'org.jmockit', name: 'jmockit', version: '1.41'
 	testImplementation group: 'org.awaitility', name: 'awaitility', version: '3.0.0'
 	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.0.2'
+
 }
 
 test {

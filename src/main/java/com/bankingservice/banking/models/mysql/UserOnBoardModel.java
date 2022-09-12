@@ -28,6 +28,9 @@ public class UserOnBoardModel {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "accountNumber")
+    private Long accountNumber;
+
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;

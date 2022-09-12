@@ -22,7 +22,8 @@ public class UniqueValueUtil {
             UUID uuid = UUID.randomUUID();
             Long epochMilli = Instant.now().toEpochMilli();
             Integer hashCode = ("BS" + uuid + epochMilli).hashCode();
-            uniqueKeyList.add(prefix + hashCode);
+            Integer positiveHashcode = Math.abs(hashCode);
+            uniqueKeyList.add(prefix + positiveHashcode);
         }
         return uniqueKeyList;
     }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.bankingservice.banking.constants.Constants.OK;
 
 @RestController
-@RequestMapping("/account/v1")
+@RequestMapping("/health-check/v1")
 public class HealthCheckController {
 
     /**

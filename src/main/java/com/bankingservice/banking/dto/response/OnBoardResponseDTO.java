@@ -50,4 +50,8 @@ public class OnBoardResponseDTO implements Serializable {
      * accountType is type of account - CURRENT/SAVINGS/NRI_ACCOUNT
      */
     private AccountType accountType;
+    /**
+     * accountNumber is the account number
+     */
+    private Long accountNumber;
 }

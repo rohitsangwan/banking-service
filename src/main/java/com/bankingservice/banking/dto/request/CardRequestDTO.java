@@ -10,4 +10,5 @@ public class CardRequestDTO implements Serializable {
      * userId is the user id which is unique
      */
     private String userId;
+    private Long otp;
 }
