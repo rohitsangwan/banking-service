@@ -86,4 +86,19 @@ public class ApplicationExceptionHandler {
         baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), MDC.get(REQUEST_ID), MDC.get(RESPONSE_ID)));
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * Handles expired otp exception
+     *
+     * @param e
+     * @return response entity
+     */
+    @ExceptionHandler(OtpExpiredException.class)
+    public ResponseEntity<BaseResponseDTO> handleOtpExpiredException(OtpExpiredException e){
+        logger.error("OtpExpiredException: " +  e.getStackTrace());
+        BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
+        baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), MDC.get(REQUEST_ID), MDC.get(RESPONSE_ID)));
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.BAD_REQUEST);
+    }
+
 }

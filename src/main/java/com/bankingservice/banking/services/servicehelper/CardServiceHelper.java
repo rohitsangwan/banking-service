@@ -7,8 +7,10 @@ import com.bankingservice.banking.enums.CardState;
 import com.bankingservice.banking.enums.ErrorCode;
 import com.bankingservice.banking.exception.*;
 import com.bankingservice.banking.models.mysql.CardModel;
+import com.bankingservice.banking.models.mysql.OtpModel;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.repository.CardRepository;
+import com.bankingservice.banking.repository.OtpRepository;
 import com.bankingservice.banking.repository.RegisterUserRepository;
 import com.bankingservice.banking.services.EmailService;
 import com.bankingservice.banking.utils.CardUtil;
@@ -31,6 +33,8 @@ public class CardServiceHelper {
     private RegisterUserRepository registerUserRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private OtpRepository otpRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceHelper.class);
 
@@ -148,17 +152,14 @@ public class CardServiceHelper {
         }
     }
 
-    public Boolean sendOtp(CardRequestDTO cardRequestDTO, HttpSession httpSession) throws UserNotFoundException {
+    public void sendOtp(CardRequestDTO cardRequestDTO) throws UserNotFoundException {
         Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(cardRequestDTO.getUserId());
         if (registerUserModel.isPresent()) {
-            Boolean isEmailSent = emailService.sendEmail(registerUserModel.get().getEmail(), cardRequestDTO, httpSession);
-            if (isEmailSent) {
-                logger.info("[sendOtp] Email sent successfully to : {}", registerUserModel.get().getEmail());
-                return true;
-            } else {
-                logger.info("[sendOtp] Email sending failed to : {}", registerUserModel.get().getEmail());
-                return false;
-            }
+            OtpModel otpModel = emailService.sendEmail(registerUserModel.get().getEmail());
+            otpModel.setOtpId(registerUserModel.get().getId());
+            logger.info("[sendOtp] Email sent successfully to : {}", registerUserModel.get().getEmail());
+            otpRepository.save(otpModel);
+            logger.info("[sendOtp] Otp saved in db for userId : {}", cardRequestDTO.getUserId());
         }
         else {
             logger.error("[sendOtp] user does not exist for user ID : {}", cardRequestDTO.getUserId());
@@ -168,10 +169,10 @@ public class CardServiceHelper {
         }
     }
 
-    public Boolean validateOtp(CardRequestDTO cardRequestDTO, HttpSession httpSession) throws UserNotFoundException, InvalidOtpException {
+    public Boolean validateOtp(CardRequestDTO cardRequestDTO) throws UserNotFoundException, InvalidOtpException, OtpExpiredException {
         Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(cardRequestDTO.getUserId());
         if (registerUserModel.isPresent()) {
-            Boolean isOtpValid = emailService.validateOtp(registerUserModel.get().getEmail(), cardRequestDTO, httpSession);
+            Boolean isOtpValid = emailService.validateOtp(registerUserModel.get(), cardRequestDTO);
             if(isOtpValid){
                 logger.info("[validateOtp] OTP is valid which was sent to : {}", registerUserModel.get().getEmail());
                 return true;

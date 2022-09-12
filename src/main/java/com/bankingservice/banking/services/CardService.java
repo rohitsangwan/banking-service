@@ -86,14 +86,14 @@ public class CardService {
      * @throws CardNotFoundException
      * @throws InvalidOtpException
      */
-    public CardResponseDTO getCardDetails(CardRequestDTO cardRequestDTO, HttpSession httpSession) throws InvalidOtpException, CardNotFoundException, UserNotFoundException {
+    public CardResponseDTO getCardDetails(CardRequestDTO cardRequestDTO) throws InvalidOtpException, CardNotFoundException, UserNotFoundException, OtpExpiredException {
 
         if (cardRequestDTO.getOtp() == null) {
-            logger.info("[getCardDetails] sending otp to userId : {}", cardRequestDTO.getUserId());
-            cardServiceHelper.sendOtp(cardRequestDTO, httpSession);
+            logger.info("[getCardDetails] Sending otp to userId : {}", cardRequestDTO.getUserId());
+            cardServiceHelper.sendOtp(cardRequestDTO);
             return null;
         } else {
-            Boolean isOtpValid = cardServiceHelper.validateOtp(cardRequestDTO, httpSession);
+            Boolean isOtpValid = cardServiceHelper.validateOtp(cardRequestDTO);
             if (isOtpValid) {
                 try {
                     logger.info("[getCardDetails] fetching card details for user ID : {}", cardRequestDTO.getUserId());

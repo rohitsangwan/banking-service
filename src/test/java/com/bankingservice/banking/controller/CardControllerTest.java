@@ -93,17 +93,17 @@ public class CardControllerTest {
     }
 
     @Test
-    public void getCardInfo() throws UserNotFoundException, CardNotFoundException, InvalidOtpException {
+    public void getCardInfo() throws UserNotFoundException, CardNotFoundException, InvalidOtpException, OtpExpiredException {
         new Expectations() {{
-            cardService.getCardDetails((CardRequestDTO) any, (HttpSession) any);
+            cardService.getCardDetails((CardRequestDTO) any);
             result = cardResponseDTO;
         }};
-        BaseResponseDTO baseResponseDTO = cardController.getCardInfo(cardRequestDTO, session).getBody();
+        BaseResponseDTO baseResponseDTO = cardController.getCardInfo(cardRequestDTO).getBody();
         Assert.assertNotNull(baseResponseDTO);
         Assert.assertNotNull(baseResponseDTO.getData());
         Assert.assertNotNull(baseResponseDTO.getMetaDTO());
         new Verifications() {{
-            cardService.getCardDetails((CardRequestDTO) any,  (HttpSession) any);
+            cardService.getCardDetails((CardRequestDTO) any);
             times = 1;
         }};
     }
