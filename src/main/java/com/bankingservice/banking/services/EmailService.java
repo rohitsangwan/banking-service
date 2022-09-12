@@ -4,19 +4,27 @@ import com.bankingservice.banking.constants.Constants;
 import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.enums.ErrorCode;
 import com.bankingservice.banking.exception.InvalidOtpException;
+import com.bankingservice.banking.exception.OtpExpiredException;
+import com.bankingservice.banking.models.mysql.OtpModel;
+import com.bankingservice.banking.models.mysql.RegisterUserModel;
+import com.bankingservice.banking.repository.OtpRepository;
 import com.bankingservice.banking.utils.OtpUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
 import java.util.Properties;
 
 @Service
 public class EmailService {
 
-    public Boolean sendEmail(String email, CardRequestDTO cardRequestDTO, HttpSession httpSession) {
+    @Autowired
+    private OtpRepository otpRepository;
+
+    public OtpModel sendEmail(String email) {
 
         Properties properties = System.getProperties();
         properties.put(Constants.SMTP_HOST, Constants.HOST);
@@ -41,32 +49,47 @@ public class EmailService {
             Transport.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
-        httpSession.setAttribute(Constants.MYOTP, generatedOTP);
-        httpSession.setAttribute(Constants.MYEMAIL, email);
-        httpSession.setMaxInactiveInterval(60);
-        return true;
+        OtpModel otpModel = new OtpModel();
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        otpModel.setOtp(generatedOTP);
+        otpModel.setTime(currentTime);
+        return otpModel;
     }
 
-    public Boolean validateOtp(String email, CardRequestDTO cardRequestDTO, HttpSession httpSession) throws InvalidOtpException {
+    public Boolean validateOtp(RegisterUserModel registerUserModel, CardRequestDTO cardRequestDTO) throws InvalidOtpException, OtpExpiredException {
         try {
-            Long myOtp = (Long) httpSession.getAttribute(Constants.MYOTP);
-            String myEmail = (String) httpSession.getAttribute(Constants.MYEMAIL);
-            httpSession.removeAttribute(Constants.MYOTP);
-            httpSession.removeAttribute(Constants.MYEMAIL);
-            if (myOtp.equals(cardRequestDTO.getOtp()) && myEmail.equals(email)) {
-                return true;
+            OtpModel otpModel = otpRepository.findByOtpId(registerUserModel.getId());
+            if(otpModel.getOtp() == null)
+                throw  new InvalidOtpException(ErrorCode.OTP_VALIDATION_FAILED,
+                        String.format(ErrorCode.OTP_VALIDATION_FAILED.getErrorMessage(), registerUserModel.getEmail()),
+                        ErrorCode.OTP_VALIDATION_FAILED.getDisplayMessage());
+            Long myOtp = otpModel.getOtp();
+            if (myOtp.equals(cardRequestDTO.getOtp())) {
+                if (System.currentTimeMillis() - otpModel.getTime().getTime() > 60000) {
+                    OtpModel myOtpModel  = sendEmail(registerUserModel.getEmail());
+                    otpModel.setOtp(myOtpModel.getOtp());
+                    otpModel.setTime(myOtpModel.getTime());
+                    otpRepository.save(otpModel);
+                    throw new OtpExpiredException(ErrorCode.OTP_EXPIRED, ErrorCode.OTP_EXPIRED.getErrorMessage(),
+                            ErrorCode.OTP_EXPIRED.getDisplayMessage());
+                }
+                else {
+                    return true;
+                }
             } else {
-
                 throw new InvalidOtpException(ErrorCode.OTP_VALIDATION_FAILED,
-                        String.format(ErrorCode.OTP_VALIDATION_FAILED.getErrorMessage(), email),
+                        String.format(ErrorCode.OTP_VALIDATION_FAILED.getErrorMessage(), registerUserModel.getEmail()),
                         ErrorCode.OTP_VALIDATION_FAILED.getDisplayMessage());
             }
-        } catch (InvalidOtpException | NullPointerException e){
+        } catch (InvalidOtpException | NullPointerException e) {
             throw new InvalidOtpException(ErrorCode.OTP_VALIDATION_FAILED,
-                    String.format(ErrorCode.OTP_VALIDATION_FAILED.getErrorMessage(), email),
+                    String.format(ErrorCode.OTP_VALIDATION_FAILED.getErrorMessage(), registerUserModel.getEmail()),
                     ErrorCode.OTP_VALIDATION_FAILED.getDisplayMessage());
+        }catch (OtpExpiredException e){
+            throw new OtpExpiredException(ErrorCode.OTP_EXPIRED, ErrorCode.OTP_EXPIRED.getErrorMessage(),
+                    ErrorCode.OTP_EXPIRED.getDisplayMessage());
         }
     }
 }

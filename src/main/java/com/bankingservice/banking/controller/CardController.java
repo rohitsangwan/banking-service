@@ -38,7 +38,8 @@ public class CardController {
      * @throws UserIdNotFoundException
      */
     @PostMapping("/new-card")
-    public ResponseEntity<BaseResponseDTO> generateCard(@RequestBody CardRequestDTO cardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
+    public ResponseEntity<BaseResponseDTO> generateCard(@RequestBody CardRequestDTO cardRequestDTO)
+            throws InsertionFailedException, UserIdNotFoundException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         baseResponseDTO.setData(cardService.generateCardDetails(cardRequestDTO));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
@@ -53,7 +54,8 @@ public class CardController {
      * @throws UserIdNotFoundException
      */
     @PostMapping("/pin")
-    public ResponseEntity<BaseResponseDTO> setPin(@RequestBody SetPinRequestDTO setPinRequestDTO) throws CardNotFoundException {
+    public ResponseEntity<BaseResponseDTO> setPin(@RequestBody SetPinRequestDTO setPinRequestDTO)
+            throws CardNotFoundException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         baseResponseDTO.setData(cardService.setPin(setPinRequestDTO));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
@@ -67,9 +69,10 @@ public class CardController {
      * @return ResponseEntity
      */
     @GetMapping("/card-info")
-    public ResponseEntity<BaseResponseDTO> getCardInfo(@RequestBody CardRequestDTO cardRequestDTO, HttpSession httpSession) throws UserNotFoundException, CardNotFoundException, InvalidOtpException {
+    public ResponseEntity<BaseResponseDTO> getCardInfo(@RequestBody CardRequestDTO cardRequestDTO)
+            throws UserNotFoundException, CardNotFoundException, InvalidOtpException, OtpExpiredException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO<>();
-        baseResponseDTO.setData(cardService.getCardDetails(cardRequestDTO, httpSession));
+        baseResponseDTO.setData(cardService.getCardDetails(cardRequestDTO));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }

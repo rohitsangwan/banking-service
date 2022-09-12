@@ -122,12 +122,12 @@ public class CardServiceTest {
     }
 
     @Test
-    public void testGetCardDetails() throws UserNotFoundException, CardNotFoundException, InvalidOtpException {
+    public void testGetCardDetails() throws UserNotFoundException, CardNotFoundException, InvalidOtpException, OtpExpiredException {
         new Expectations() {{
             cardServiceHelper.findCardDetails(userId);
             result = cardModel;
         }};
-        CardResponseDTO cardResponseDTO = cardService.getCardDetails(cardRequestDTO, session);
+        CardResponseDTO cardResponseDTO = cardService.getCardDetails(cardRequestDTO);
         Assert.assertNotNull(cardResponseDTO);
         new Verifications() {{
             cardServiceHelper.findCardDetails(userId);
@@ -136,12 +136,12 @@ public class CardServiceTest {
     }
 
     @Test(expectedExceptions = UserNotFoundException.class)
-    public void testGetCardDetailsUserNotFoundException() throws UserNotFoundException, CardNotFoundException, InvalidOtpException {
+    public void testGetCardDetailsUserNotFoundException() throws UserNotFoundException, CardNotFoundException, InvalidOtpException, OtpExpiredException {
         new Expectations() {{
             cardServiceHelper.findCardDetails(userId);
             result = new UserNotFoundException();
         }};
-        CardResponseDTO cardResponseDTO = cardService.getCardDetails(cardRequestDTO, session);
+        CardResponseDTO cardResponseDTO = cardService.getCardDetails(cardRequestDTO);
         Assert.assertNotNull(cardResponseDTO);
         new Verifications() {{
             cardServiceHelper.findCardDetails(userId);
@@ -150,12 +150,12 @@ public class CardServiceTest {
     }
 
     @Test(expectedExceptions = CardNotFoundException.class)
-    public void testGetCardDetailsCardNotFoundException() throws UserNotFoundException, CardNotFoundException, InvalidOtpException {
+    public void testGetCardDetailsCardNotFoundException() throws UserNotFoundException, CardNotFoundException, InvalidOtpException, OtpExpiredException {
         new Expectations() {{
             cardServiceHelper.findCardDetails(userId);
             result = new CardNotFoundException();
         }};
-        CardResponseDTO cardResponseDTO = cardService.getCardDetails(cardRequestDTO, session);
+        CardResponseDTO cardResponseDTO = cardService.getCardDetails(cardRequestDTO);
         Assert.assertNotNull(cardResponseDTO);
         new Verifications() {{
             cardServiceHelper.findCardDetails(userId);
