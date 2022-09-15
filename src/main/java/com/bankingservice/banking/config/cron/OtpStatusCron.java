@@ -26,14 +26,14 @@ public class OtpStatusCron {
     @Scheduled(cron = "*/10 * * * * ?")
     public void updateStatusOfExpiredOtps() {
         List<OtpModel> otpModelList = otpRepository.findAll();
-        List<OtpModel> newOtpModelList = otpModelList.stream().map(otpModel -> {
+        List<OtpModel> updatedOtpModelList = otpModelList.stream().map(otpModel -> {
             if (otpModel.getOtpStatus() == OtpStatus.ACTIVE && System.currentTimeMillis() - otpModel.getTime().getTime() > 60000) {
                 otpModel.setOtpStatus(OtpStatus.EXPIRED);
-                logger.info("Updating the OTP status of {} to Expired", otpModel);
+                logger.info("[updateStatusOfExpiredOtps] Updating the OTP status of {} to Expired", otpModel);
             }
             return otpModel;
         }).collect(Collectors.toList());
-        otpModelList = newOtpModelList;
+        otpModelList = updatedOtpModelList;
         otpRepository.saveAll(otpModelList);
     }
 }

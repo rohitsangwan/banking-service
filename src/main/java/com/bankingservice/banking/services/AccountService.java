@@ -1,5 +1,6 @@
 package com.bankingservice.banking.services;
 
+import com.bankingservice.banking.dao.RegisterUserCacheDao;
 import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
@@ -13,6 +14,7 @@ import com.bankingservice.banking.exception.UserNotFoundException;
 import com.bankingservice.banking.models.mysql.CardModel;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
+import com.bankingservice.banking.services.cache.RegisterUserCacheService;
 import com.bankingservice.banking.services.servicehelper.AccountServiceHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class AccountService {
     @Autowired
     private AccountServiceHelper accountServiceHelper;
 
+    @Autowired
+    private RegisterUserCacheDao registerUserCacheDao;
+
     /**
      * insert details for user registration
      *
@@ -44,6 +49,8 @@ public class AccountService {
             logger.info("[insertDetailsForRegistration] Registering a new user: {}", registerRequestDTO);
             RegisterUserModel entity = accountServiceHelper.convertDtoToRegisterUserModel(registerRequestDTO);
             RegisterUserModel registerUserModel = accountServiceHelper.saveRegisterModel(entity);
+            registerUserCacheDao.saveUserRegistrationDetails(entity);
+            logger.info("[insertDetailsForRegistration] details added to cache : {}", registerRequestDTO);
             RegisterUserResponseDTO registerUserResponseDTO = accountServiceHelper.convertModelToRegisterResponseDto(registerUserModel);
             return registerUserResponseDTO;
         } catch (DataIntegrityViolationException e) {

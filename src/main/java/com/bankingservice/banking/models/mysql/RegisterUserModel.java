@@ -2,9 +2,8 @@ package com.bankingservice.banking.models.mysql;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -12,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Entity
 @Table(name = "register_user")
-public class RegisterUserModel {
+public class RegisterUserModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore

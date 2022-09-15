@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 	id 'java'
 	id 'jacoco'
+	id "org.sonarqube" version "3.4.0.2513"
 }
 
 group = 'com.bankingservice'
@@ -28,8 +29,6 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	testImplementation group: 'org.testng', name: 'testng', version: '6.14.3'
@@ -38,13 +37,29 @@ dependencies {
 	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.0.2'
+	implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
 
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: '2.4.2'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.7.3'
+	implementation group: 'redis.clients', name: 'jedis', version: '4.2.3'
 }
 
 test {
 	useTestNG() { //Tells Gradle to use TestNG
 		useDefaultListeners = true // Tells TestNG to execute its default reporting structure
 		//suites 'src/test/suite.xml' //location of our suite.xml
+	}
+}
+
+sonarqube {
+	properties {
+		property 'sonar.host.url', 'http://localhost:9000'
+		property 'sonar.projectKey', 'Banking-Service'
+		property 'sonar.login', 'sqp_c9a2fc2f8e79c67bb38b71fffb256494539221d6'
+		property 'sonar.java.coveragePlugin', "jacoco"
+		property 'sonar.sourceEncoding', 'UTF-8'
+		property 'sonar.jacoco.reportPaths',"${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+		property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
 	}
 }
 
@@ -55,6 +70,9 @@ jacocoTestReport {
 		html.enabled false
 	}
 }
+
+test.finalizedBy jacocoTestReport
+
 
 test.finalizedBy jacocoTestReport
 tasks.withType(JavaCompile) {

@@ -1,5 +1,6 @@
 package com.bankingservice.banking.services.servicehelper;
 
+import com.bankingservice.banking.dao.RegisterUserCacheDao;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.response.OnBoardResponseDTO;
@@ -32,10 +33,16 @@ import static com.bankingservice.banking.constants.Constants.REG;
 public class AccountServiceHelper {
     @Autowired
     private RegisterUserRepository registerUserRepository;
+
     @Autowired
     private UserOnBoardRepository userOnBoardRepository;
+
     @Autowired
     private CardRepository cardRepository;
+
+    @Autowired
+    private RegisterUserCacheDao registerUserCacheDao;
+
 
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceHelper.class);
 
@@ -162,24 +169,39 @@ public class AccountServiceHelper {
      * @throws UserNotFoundException
      */
     public UserDetailsResponseDTO getDetails(String userId) throws UserNotFoundException {
-        UserDetailsResponseDTO userDetailsResponseDTO = new UserDetailsResponseDTO();
         logger.info("[getDetails] checking if the user exists for user Id: {}", userId);
-        Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(userId);
-        if (registerUserModel.isPresent()) {
-            logger.info("[getDetails] user exists for user Id: {}", userId);
-            BeanUtils.copyProperties(registerUserModel.get(), userDetailsResponseDTO);
-            Optional<UserOnBoardModel> onBoardModel = userOnBoardRepository.findByRegisterUserId(registerUserModel.get().getId());
-            if (onBoardModel.isPresent()) {
-                BeanUtils.copyProperties(onBoardModel.get(), userDetailsResponseDTO);
-            } else {
-                logger.info("[getDetails] user has not onboarded for user Id: {}", userId);
-            }
+        if (registerUserCacheDao.getRegisterUserModelByUserId(userId) != null) {
+            RegisterUserModel registerUserModel = registerUserCacheDao.getRegisterUserModelByUserId(userId);
+            logger.info("[getDetails] record found in cache : {}", registerUserModel);
+            UserDetailsResponseDTO userDetailsResponseDTO = fetchDetails(registerUserModel);
             return userDetailsResponseDTO;
         } else {
-            logger.error("[getDetails] user does not exist for user ID : {}", userId);
-            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
-                    String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
-                    ErrorCode.USER_NOT_FOUND.getDisplayMessage());
+            logger.info("[getDetails] record does not exist in cache, fetching from db : {}", userId);
+            Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(userId);
+            if (registerUserModel.isPresent()) {
+                RegisterUserModel model = registerUserModel.get();
+                logger.info("[getDetails] saving the record in the cache : {}", model);
+                registerUserCacheDao.saveUserRegistrationDetails(model);
+                UserDetailsResponseDTO userDetailsResponseDTO = fetchDetails(model);
+                return userDetailsResponseDTO;
+            } else {
+                logger.error("[getDetails] user does not exist for user ID : {}", userId);
+                throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
+                        String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
+                        ErrorCode.USER_NOT_FOUND.getDisplayMessage());
+            }
         }
+    }
+
+    private UserDetailsResponseDTO fetchDetails(RegisterUserModel registerUserModel) {
+        UserDetailsResponseDTO userDetailsResponseDTO = new UserDetailsResponseDTO();
+        BeanUtils.copyProperties(registerUserModel, userDetailsResponseDTO);
+        Optional<UserOnBoardModel> onBoardModel = userOnBoardRepository.findByRegisterUserId(registerUserModel.getId());
+        if (onBoardModel.isPresent()) {
+            BeanUtils.copyProperties(onBoardModel.get(), userDetailsResponseDTO);
+        } else {
+            logger.info("[getDetails] user has not onboarded for user Id: {}", registerUserModel.getUserId());
+        }
+        return userDetailsResponseDTO;
     }
 }
