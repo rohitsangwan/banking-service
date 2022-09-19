@@ -103,6 +103,8 @@ public final class Constants {
      * The constant BODY which is the body of the email containing OTP
      */
     public static final String BODY = "Your OTP is ";
+    public static final String REDIS_HOST = "localhost";
+    public static final Integer REDIS_PORT = 6379;
     /**
      * The constant URI_TO_IGNORE.
      */

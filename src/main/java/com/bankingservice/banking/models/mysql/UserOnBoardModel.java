@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 @ToString
 @Entity
 @Table(name = "onboard_user")
-public class UserOnBoardModel {
+public class UserOnBoardModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

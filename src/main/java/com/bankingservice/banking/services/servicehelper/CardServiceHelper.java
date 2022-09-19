@@ -5,6 +5,7 @@ import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.CardResponseDTO;
 import com.bankingservice.banking.enums.CardState;
 import com.bankingservice.banking.enums.ErrorCode;
+import com.bankingservice.banking.enums.OtpStatus;
 import com.bankingservice.banking.exception.*;
 import com.bankingservice.banking.models.mysql.CardModel;
 import com.bankingservice.banking.models.mysql.OtpModel;
@@ -156,12 +157,19 @@ public class CardServiceHelper {
         Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(cardRequestDTO.getUserId());
         if (registerUserModel.isPresent()) {
             OtpModel otpModel = emailService.sendEmail(registerUserModel.get().getEmail());
-            otpModel.setOtpId(registerUserModel.get().getId());
             logger.info("[sendOtp] Email sent successfully to : {}", registerUserModel.get().getEmail());
-            otpRepository.save(otpModel);
+            otpModel.setOtpId(registerUserModel.get().getId());
+            otpModel.setOtpStatus(OtpStatus.ACTIVE);
+            Optional<OtpModel> myOtpModel = otpRepository.findByOtpId(registerUserModel.get().getId());
+            if (myOtpModel.isPresent()) {
+                myOtpModel.get().setOtp(otpModel.getOtp());
+                myOtpModel.get().setTime(otpModel.getTime());
+                myOtpModel.get().setOtpStatus(OtpStatus.ACTIVE);
+                otpRepository.save(myOtpModel.get());
+            } else
+                otpRepository.save(otpModel);
             logger.info("[sendOtp] Otp saved in db for userId : {}", cardRequestDTO.getUserId());
-        }
-        else {
+        } else {
             logger.error("[sendOtp] user does not exist for user ID : {}", cardRequestDTO.getUserId());
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
                     String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), cardRequestDTO.getUserId()),
@@ -173,16 +181,14 @@ public class CardServiceHelper {
         Optional<RegisterUserModel> registerUserModel = registerUserRepository.findByUserId(cardRequestDTO.getUserId());
         if (registerUserModel.isPresent()) {
             Boolean isOtpValid = emailService.validateOtp(registerUserModel.get(), cardRequestDTO);
-            if(isOtpValid){
+            if (isOtpValid) {
                 logger.info("[validateOtp] OTP is valid which was sent to : {}", registerUserModel.get().getEmail());
                 return true;
-            }
-            else {
+            } else {
                 logger.info("[validateOtp] OTP is invalid which was sent to : {}", registerUserModel.get().getEmail());
                 return false;
             }
-        }
-        else {
+        } else {
             logger.error("[validateOtp] user does not exist for user ID : {}", cardRequestDTO.getUserId());
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
                     String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), cardRequestDTO.getUserId()),
