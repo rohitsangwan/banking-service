@@ -1,0 +1,4 @@
+2022-09-16 17:00:17,398 INFO org.springframework.boot.StartupInfoLogger [restartedMain] [] [] Starting BankingApplication using Java 1.8.0_341 on 197NODMB41169.local with PID 3265 (/Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking/build/classes/java/main started by rohitsangwan in /Users/rohitsangwan/Desktop/Banking-Service/banking-service/banking)
+2022-09-16 17:00:17,401 DEBUG org.springframework.boot.StartupInfoLogger [restartedMain] [] [] Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-09-16 17:00:17,407 INFO org.springframework.boot.SpringApplication [restartedMain] [] [] No active profile set, falling back to 1 default profile: "default"
+2022-09-16 17:00:28,064 INFO org.springframework.boot.StartupInfoLogger [restartedMain] [] [] Started BankingApplication in 31.455 seconds (JVM running for 32.53)

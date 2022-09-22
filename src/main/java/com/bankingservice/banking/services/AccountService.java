@@ -1,11 +1,13 @@
 package com.bankingservice.banking.services;
 
+import com.bankingservice.banking.client.TransactionClient;
 import com.bankingservice.banking.dao.RegisterUserCacheDao;
 import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.*;
+import com.bankingservice.banking.dto.response.transaction.ActivateAccountDTO;
 import com.bankingservice.banking.enums.ErrorCode;
 import com.bankingservice.banking.exception.CardNotFoundException;
 import com.bankingservice.banking.exception.InsertionFailedException;
@@ -35,6 +37,9 @@ public class AccountService {
 
     @Autowired
     private RegisterUserCacheDao registerUserCacheDao;
+
+    @Autowired
+    private TransactionClient transactionClient;
 
     /**
      * insert details for user registration
@@ -77,6 +82,9 @@ public class AccountService {
             UserOnBoardModel user = accountServiceHelper.convertDtoToUserOnBoardModel(onBoardRequestDTO);
             UserOnBoardModel userOnBoardModel = accountServiceHelper.saveOnBoardModel(user);
             OnBoardResponseDTO onBoardResponseDTO = accountServiceHelper.convertModelToOnBoardResponseDto(userOnBoardModel);
+            ActivateAccountDTO activateAccountDTO = new ActivateAccountDTO();
+            activateAccountDTO.setAccountNumber(onBoardResponseDTO.getAccountNumber());
+            transactionClient.activateAccount(activateAccountDTO, onBoardResponseDTO.getUserId());
             return onBoardResponseDTO;
         } catch (DataIntegrityViolationException | InsertionFailedException e) {
             logger.error("[saveRegisterModel] account already exists for userId: {}", onBoardRequestDTO.getUserId());
