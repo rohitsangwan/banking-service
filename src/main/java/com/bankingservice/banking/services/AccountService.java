@@ -9,10 +9,7 @@ import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.*;
 import com.bankingservice.banking.dto.response.transaction.ActivateAccountDTO;
 import com.bankingservice.banking.enums.ErrorCode;
-import com.bankingservice.banking.exception.CardNotFoundException;
-import com.bankingservice.banking.exception.InsertionFailedException;
-import com.bankingservice.banking.exception.UserIdNotFoundException;
-import com.bankingservice.banking.exception.UserNotFoundException;
+import com.bankingservice.banking.exception.*;
 import com.bankingservice.banking.models.mysql.CardModel;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
@@ -76,7 +73,7 @@ public class AccountService {
      * @throws UserIdNotFoundException
      */
     public OnBoardResponseDTO insertDetailsForOnBoarding(OnBoardRequestDTO onBoardRequestDTO) throws
-            UserIdNotFoundException, InsertionFailedException {
+            UserIdNotFoundException, InsertionFailedException, ServiceCallException {
         try {
             logger.info("[insertDetailsForOnBoarding] On boarding a user: {}", onBoardRequestDTO);
             UserOnBoardModel user = accountServiceHelper.convertDtoToUserOnBoardModel(onBoardRequestDTO);
@@ -91,6 +88,10 @@ public class AccountService {
             throw new InsertionFailedException(ErrorCode.USER_ONBOARD_FAILED,
                     ErrorCode.USER_ONBOARD_FAILED.getErrorMessage(),
                     ErrorCode.USER_ONBOARD_FAILED.getDisplayMessage());
+        } catch (ServiceCallException e) {
+            throw new ServiceCallException(ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED,
+                    String.format(ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED.getErrorMessage(), onBoardRequestDTO.getUserId()),
+                    ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED.getDisplayMessage());
         }
     }
 

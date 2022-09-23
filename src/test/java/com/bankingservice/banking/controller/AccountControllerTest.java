@@ -6,6 +6,7 @@ import com.bankingservice.banking.dto.response.*;
 import com.bankingservice.banking.enums.AccountType;
 import com.bankingservice.banking.enums.Gender;
 import com.bankingservice.banking.exception.InsertionFailedException;
+import com.bankingservice.banking.exception.ServiceCallException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.exception.UserNotFoundException;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
@@ -120,7 +121,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void testOnBoardUser() throws InsertionFailedException, UserIdNotFoundException {
+    public void testOnBoardUser() throws InsertionFailedException, UserIdNotFoundException, ServiceCallException {
         new Expectations() {{
             accountService.insertDetailsForOnBoarding((OnBoardRequestDTO) any);
             result = onBoardResponseDTO;

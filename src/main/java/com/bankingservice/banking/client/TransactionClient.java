@@ -3,6 +3,8 @@ package com.bankingservice.banking.client;
 import com.bankingservice.banking.constants.ApiEndpoints;
 import com.bankingservice.banking.dto.response.BaseResponseDTO;
 import com.bankingservice.banking.dto.response.transaction.ActivateAccountDTO;
+import com.bankingservice.banking.enums.ErrorCode;
+import com.bankingservice.banking.exception.ServiceCallException;
 import com.bankingservice.banking.services.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -27,7 +29,7 @@ public class TransactionClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public void activateAccount(ActivateAccountDTO activateAccountDTO, String userId) {
+    public void activateAccount(ActivateAccountDTO activateAccountDTO, String userId) throws ServiceCallException {
         StringBuilder urlBuilder = new StringBuilder(txnBaseUrl);
         urlBuilder.append(ApiEndpoints.TRANSACTION_ACTIVATE_ACCOUNT_ENDPOINT);
         urlBuilder.append(userId);
@@ -39,9 +41,15 @@ public class TransactionClient {
             logger.info("[activateAccount] response : {}", response);
             if (!response.getStatusCode().is2xxSuccessful()) {
                 logger.error("[activateAccount] Exception occurred while activating the account: {}", userId);
+                throw new ServiceCallException(ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED,
+                        String.format(ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED.getErrorMessage(), userId),
+                        ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED.getDisplayMessage());
             }
         } catch (Exception e) {
             logger.error("[activateAccount] API failed for userId: {}", userId);
+            throw new ServiceCallException(ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED,
+                    String.format(ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED.getErrorMessage(), userId),
+                    ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED.getDisplayMessage());
         }
     }
 
