@@ -12,4 +12,6 @@ import java.util.Optional;
 @Repository
 public interface UserOnBoardRepository extends JpaRepository<UserOnBoardModel, Integer> {
     Optional<UserOnBoardModel> findByRegisterUserId(Integer id);
+
+    UserOnBoardModel findByAccountNumber(Long accountNumber);
 }

@@ -54,4 +54,8 @@ public class OnBoardResponseDTO implements Serializable {
      * accountNumber is the account number
      */
     private Long accountNumber;
+    /**
+     * accountBalance is the bank account balance
+     */
+    private Double accountBalance;
 }

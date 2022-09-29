@@ -1,27 +1,22 @@
 package com.bankingservice.banking.services;
 
-import com.bankingservice.banking.client.TransactionClient;
 import com.bankingservice.banking.dao.RegisterUserCacheDao;
-import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
-import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.*;
 import com.bankingservice.banking.dto.response.transaction.ActivateAccountDTO;
+import com.bankingservice.banking.dto.response.transaction.TxnValidationDTO;
 import com.bankingservice.banking.enums.ErrorCode;
 import com.bankingservice.banking.exception.*;
-import com.bankingservice.banking.models.mysql.CardModel;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
-import com.bankingservice.banking.services.cache.RegisterUserCacheService;
 import com.bankingservice.banking.services.servicehelper.AccountServiceHelper;
-import org.springframework.beans.BeanUtils;
+import com.bankingservice.banking.services.servicehelper.TransactionServiceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Account Service
@@ -36,7 +31,7 @@ public class AccountService {
     private RegisterUserCacheDao registerUserCacheDao;
 
     @Autowired
-    private TransactionClient transactionClient;
+    private TransactionServiceHelper transactionServiceHelper;
 
     /**
      * insert details for user registration
@@ -81,17 +76,12 @@ public class AccountService {
             OnBoardResponseDTO onBoardResponseDTO = accountServiceHelper.convertModelToOnBoardResponseDto(userOnBoardModel);
             ActivateAccountDTO activateAccountDTO = new ActivateAccountDTO();
             activateAccountDTO.setAccountNumber(onBoardResponseDTO.getAccountNumber());
-            transactionClient.activateAccount(activateAccountDTO, onBoardResponseDTO.getUserId());
             return onBoardResponseDTO;
         } catch (DataIntegrityViolationException | InsertionFailedException e) {
             logger.error("[saveRegisterModel] account already exists for userId: {}", onBoardRequestDTO.getUserId());
             throw new InsertionFailedException(ErrorCode.USER_ONBOARD_FAILED,
                     ErrorCode.USER_ONBOARD_FAILED.getErrorMessage(),
                     ErrorCode.USER_ONBOARD_FAILED.getDisplayMessage());
-        } catch (ServiceCallException e) {
-            throw new ServiceCallException(ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED,
-                    String.format(ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED.getErrorMessage(), onBoardRequestDTO.getUserId()),
-                    ErrorCode.BANK_ACCOUNT_ACTIVATION_FAILED.getDisplayMessage());
         }
     }
 
@@ -109,6 +99,17 @@ public class AccountService {
             return userDetailsResponseDTO;
         } catch (UserNotFoundException e) {
             logger.error("[getUserDetails] user does not exist for user ID : {}", userId);
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
+                    String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
+                    ErrorCode.USER_NOT_FOUND.getDisplayMessage());
+        }
+    }
+
+    public TxnValidationDTO validateAccount(String userId) throws UserNotFoundException {
+        try {
+            TxnValidationDTO txnValidationDTO = transactionServiceHelper.validateAccount(userId);
+            return txnValidationDTO;
+        } catch (UserNotFoundException e) {
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
                     String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
                     ErrorCode.USER_NOT_FOUND.getDisplayMessage());

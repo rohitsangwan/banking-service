@@ -72,4 +72,12 @@ public class AccountController {
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/validate/{userId}")
+    public ResponseEntity<BaseResponseDTO> validate(@PathVariable("userId") String userId) throws UserNotFoundException {
+        BaseResponseDTO baseResponseDTO = new BaseResponseDTO<>();
+        baseResponseDTO.setData(accountService.validateAccount(userId));
+        baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
+    }
+
 }
