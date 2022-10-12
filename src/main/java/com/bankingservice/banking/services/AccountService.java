@@ -17,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Account Service
@@ -67,6 +68,7 @@ public class AccountService {
      * @throws InsertionFailedException
      * @throws UserIdNotFoundException
      */
+    @Transactional
     public OnBoardResponseDTO insertDetailsForOnBoarding(OnBoardRequestDTO onBoardRequestDTO) throws
             UserIdNotFoundException, InsertionFailedException, ServiceCallException {
         try {
