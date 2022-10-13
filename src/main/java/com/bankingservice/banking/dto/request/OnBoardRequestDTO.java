@@ -32,4 +32,8 @@ public class OnBoardRequestDTO implements Serializable {
      * userId is the user id which gets auto generated
      */
     private String userId;
+    /**
+     * initialDeposit is the initial deposit of the bank account
+     */
+    private Double initialDeposit;
 }

@@ -21,7 +21,7 @@ public class RegisterUserCacheDaoImpl implements RegisterUserCacheDao {
     @Override
     public void saveUserRegistrationDetails(RegisterUserModel registerUserModel) {
         try {
-            redisTemplate.opsForHash().put(CacheConstants.USER_REGISTRATION + registerUserModel.getUserId(), registerUserModel.getUserId(), registerUserModel);
+            redisTemplate.opsForHash().put(CacheConstants.USER_REGISTRATION, registerUserModel.getUserId(), registerUserModel);
         } catch (Exception exception) {
             logger.error(CacheConstants.USER_REGISTRATION_FAILED, exception);
         }

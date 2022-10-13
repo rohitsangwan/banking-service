@@ -101,4 +101,18 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handles service call exception
+     *
+     * @param e
+     * @return response entity
+     */
+    @ExceptionHandler(ServiceCallException.class)
+    public ResponseEntity<BaseResponseDTO> handleServiceCallException(ServiceCallException e){
+        logger.error("ServiceCallException: " +  e.getStackTrace());
+        BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
+        baseResponseDTO.setMetaDTO(new MetaDTO(e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage(), MDC.get(REQUEST_ID), MDC.get(RESPONSE_ID)));
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.BAD_REQUEST);
+    }
+
 }

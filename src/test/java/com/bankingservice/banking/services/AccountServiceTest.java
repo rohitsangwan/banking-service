@@ -6,6 +6,7 @@ import com.bankingservice.banking.dto.response.*;
 import com.bankingservice.banking.enums.AccountType;
 import com.bankingservice.banking.enums.Gender;
 import com.bankingservice.banking.exception.InsertionFailedException;
+import com.bankingservice.banking.exception.ServiceCallException;
 import com.bankingservice.banking.exception.UserIdNotFoundException;
 import com.bankingservice.banking.exception.UserNotFoundException;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
@@ -147,7 +148,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    void testInsertDetailsForOnBoarding() throws InsertionFailedException, UserIdNotFoundException {
+    void testInsertDetailsForOnBoarding() throws InsertionFailedException, UserIdNotFoundException, ServiceCallException {
         new Expectations() {{
             accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             result = userOnBoardModel;
@@ -161,7 +162,7 @@ public class AccountServiceTest {
     }
 
     @Test(expectedExceptions = InsertionFailedException.class)
-    public void testInsertDetailsForOnBoardingInsertionException() throws InsertionFailedException, UserIdNotFoundException {
+    public void testInsertDetailsForOnBoardingInsertionException() throws InsertionFailedException, UserIdNotFoundException, ServiceCallException {
         new Expectations() {{
             accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             result = new DataIntegrityViolationException("");
@@ -175,7 +176,7 @@ public class AccountServiceTest {
     }
 
     @Test(expectedExceptions = UserIdNotFoundException.class)
-    public void testInsertDetailsForOnBoardingIdNotFoundException() throws UserIdNotFoundException, InsertionFailedException {
+    public void testInsertDetailsForOnBoardingIdNotFoundException() throws UserIdNotFoundException, InsertionFailedException, ServiceCallException {
         new Expectations() {{
             accountServiceHelper.saveOnBoardModel((UserOnBoardModel) any);
             result = new UserIdNotFoundException();

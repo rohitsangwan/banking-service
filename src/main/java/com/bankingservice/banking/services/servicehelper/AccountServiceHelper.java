@@ -128,6 +128,7 @@ public class AccountServiceHelper {
         if (registerUserModel.isPresent()) {
             userOnBoardModel.setRegisterUserId(registerUserModel.get().getId());
             userOnBoardModel.setAccountNumber(AccountNumberUtil.generateAccountNumber());
+            userOnBoardModel.setAccountBalance(onBoardRequestDTO.getInitialDeposit());
             return userOnBoardModel;
         } else {
             logger.error("[convertDtoToUserOnBoardModel] user does not exist for userId: {}", onBoardRequestDTO.getUserId());

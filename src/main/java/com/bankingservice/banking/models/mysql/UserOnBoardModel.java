@@ -40,6 +40,9 @@ public class UserOnBoardModel implements Serializable {
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
+    @Column(name = "accountBalance")
+    private Double accountBalance;
+
     @Column(name = "register_user_id", unique = true)
     private Integer registerUserId;
 

@@ -14,7 +14,8 @@ public enum ErrorCode {
     USER_ONBOARD_FAILED("BS_ACC_400034", "Failed to insert on boarding details into db", "Account for this user Id already exists", HttpStatus.OK),
     CARD_GENERATION_FAILED("BS_ACC_400036", "Failed to generate card details", "Card already exists or user not found", HttpStatus.OK),
     OTP_VALIDATION_FAILED("BS_ACC_400039", "Incorrect OTP", "Please enter a valid OTP", HttpStatus.BAD_REQUEST),
-    OTP_EXPIRED("BS_ACC_400051", "You have entered an expired OTP. Another OTP has been sent to your mail", "Expired OTP", HttpStatus.BAD_REQUEST);
+    OTP_EXPIRED("BS_ACC_400051", "You have entered an expired OTP. Another OTP has been sent to your mail", "Expired OTP", HttpStatus.BAD_REQUEST),
+    BANK_ACCOUNT_ACTIVATION_FAILED("BS_ACC_400053", "Could not activate the bank account", "Bank account could not be activated", HttpStatus.BAD_REQUEST);
 
 
     private final String code;

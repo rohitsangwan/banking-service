@@ -1,28 +1,23 @@
 package com.bankingservice.banking.services;
 
 import com.bankingservice.banking.dao.RegisterUserCacheDao;
-import com.bankingservice.banking.dto.request.CardRequestDTO;
 import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
-import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.*;
+import com.bankingservice.banking.dto.response.transaction.ActivateAccountDTO;
+import com.bankingservice.banking.dto.response.transaction.TxnValidationDTO;
 import com.bankingservice.banking.enums.ErrorCode;
-import com.bankingservice.banking.exception.CardNotFoundException;
-import com.bankingservice.banking.exception.InsertionFailedException;
-import com.bankingservice.banking.exception.UserIdNotFoundException;
-import com.bankingservice.banking.exception.UserNotFoundException;
-import com.bankingservice.banking.models.mysql.CardModel;
+import com.bankingservice.banking.exception.*;
 import com.bankingservice.banking.models.mysql.RegisterUserModel;
 import com.bankingservice.banking.models.mysql.UserOnBoardModel;
-import com.bankingservice.banking.services.cache.RegisterUserCacheService;
 import com.bankingservice.banking.services.servicehelper.AccountServiceHelper;
-import org.springframework.beans.BeanUtils;
+import com.bankingservice.banking.services.servicehelper.TransactionServiceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Account Service
@@ -35,6 +30,9 @@ public class AccountService {
 
     @Autowired
     private RegisterUserCacheDao registerUserCacheDao;
+
+    @Autowired
+    private TransactionServiceHelper transactionServiceHelper;
 
     /**
      * insert details for user registration
@@ -70,13 +68,16 @@ public class AccountService {
      * @throws InsertionFailedException
      * @throws UserIdNotFoundException
      */
+    @Transactional
     public OnBoardResponseDTO insertDetailsForOnBoarding(OnBoardRequestDTO onBoardRequestDTO) throws
-            UserIdNotFoundException, InsertionFailedException {
+            UserIdNotFoundException, InsertionFailedException, ServiceCallException {
         try {
             logger.info("[insertDetailsForOnBoarding] On boarding a user: {}", onBoardRequestDTO);
             UserOnBoardModel user = accountServiceHelper.convertDtoToUserOnBoardModel(onBoardRequestDTO);
             UserOnBoardModel userOnBoardModel = accountServiceHelper.saveOnBoardModel(user);
             OnBoardResponseDTO onBoardResponseDTO = accountServiceHelper.convertModelToOnBoardResponseDto(userOnBoardModel);
+            ActivateAccountDTO activateAccountDTO = new ActivateAccountDTO();
+            activateAccountDTO.setAccountNumber(onBoardResponseDTO.getAccountNumber());
             return onBoardResponseDTO;
         } catch (DataIntegrityViolationException | InsertionFailedException e) {
             logger.error("[saveRegisterModel] account already exists for userId: {}", onBoardRequestDTO.getUserId());
@@ -100,6 +101,17 @@ public class AccountService {
             return userDetailsResponseDTO;
         } catch (UserNotFoundException e) {
             logger.error("[getUserDetails] user does not exist for user ID : {}", userId);
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
+                    String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
+                    ErrorCode.USER_NOT_FOUND.getDisplayMessage());
+        }
+    }
+
+    public TxnValidationDTO validateAccount(String userId) throws UserNotFoundException {
+        try {
+            TxnValidationDTO txnValidationDTO = transactionServiceHelper.validateAccount(userId);
+            return txnValidationDTO;
+        } catch (UserNotFoundException e) {
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND,
                     String.format(ErrorCode.USER_NOT_FOUND.getErrorMessage(), userId),
                     ErrorCode.USER_NOT_FOUND.getDisplayMessage());

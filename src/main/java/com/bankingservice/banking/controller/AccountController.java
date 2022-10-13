@@ -5,10 +5,7 @@ import com.bankingservice.banking.dto.request.OnBoardRequestDTO;
 import com.bankingservice.banking.dto.request.RegisterRequestDTO;
 import com.bankingservice.banking.dto.request.SetPinRequestDTO;
 import com.bankingservice.banking.dto.response.BaseResponseDTO;
-import com.bankingservice.banking.exception.CardNotFoundException;
-import com.bankingservice.banking.exception.InsertionFailedException;
-import com.bankingservice.banking.exception.UserIdNotFoundException;
-import com.bankingservice.banking.exception.UserNotFoundException;
+import com.bankingservice.banking.exception.*;
 import com.bankingservice.banking.services.AccountService;
 import com.bankingservice.banking.utils.CreateMetaData;
 import org.slf4j.Logger;
@@ -53,7 +50,7 @@ public class AccountController {
      */
 
     @PostMapping("/onboard")
-    public ResponseEntity<BaseResponseDTO> onBoardUser(@RequestBody OnBoardRequestDTO onBoardRequestDTO) throws InsertionFailedException, UserIdNotFoundException {
+    public ResponseEntity<BaseResponseDTO> onBoardUser(@RequestBody OnBoardRequestDTO onBoardRequestDTO) throws InsertionFailedException, UserIdNotFoundException, ServiceCallException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
         baseResponseDTO.setData(accountService.insertDetailsForOnBoarding(onBoardRequestDTO));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
@@ -71,6 +68,14 @@ public class AccountController {
     public ResponseEntity<BaseResponseDTO> findUserDetails(@PathVariable("userId") String userId) throws UserNotFoundException {
         BaseResponseDTO baseResponseDTO = new BaseResponseDTO<>();
         baseResponseDTO.setData(accountService.getUserDetails(userId));
+        baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/validate/{userId}")
+    public ResponseEntity<BaseResponseDTO> validate(@PathVariable("userId") String userId) throws UserNotFoundException {
+        BaseResponseDTO baseResponseDTO = new BaseResponseDTO<>();
+        baseResponseDTO.setData(accountService.validateAccount(userId));
         baseResponseDTO.setMetaDTO(CreateMetaData.createSuccessMetaData());
         return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
     }
